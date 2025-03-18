@@ -63,11 +63,11 @@ showLogo
 sleep 2
 
 # install system software
-wget --quiet -O - https://raw.githubusercontent.com/benmoses-dev/linux-helper-scripts/main/ubuntu/ubuntu_2404_root-setup.sh | bash
+wget --quiet -O - https://raw.githubusercontent.com/benexesquared/linux-helper-scripts/main/ubuntu/ubuntu_2404_root-setup.sh | bash
 
 info "Installing Desktop Software"
 sleep 2
-apt update && apt install vlc filezilla gnome-tweaks libreoffice libreoffice-help-en-gb virt-manager i3 picom feh kitty brightnessctl scrot -y
+apt update && apt install vlc filezilla gnome-tweaks libreoffice libreoffice-help-en-gb virt-manager i3 picom feh kitty brightnessctl scrot pass -y
 
 if [[ -n $(command -v syncthing) ]]; then
 	error "Syncthing is already installed!"
