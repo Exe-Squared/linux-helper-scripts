@@ -63,7 +63,7 @@ showLogo
 sleep 2
 
 # install system software
-wget --quiet -O - https://raw.githubusercontent.com/benexesquared/linux-helper-scripts/main/ubuntu/ubuntu_2404_root-setup.sh | bash
+wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/ubuntu/ubuntu_2404_root-setup.sh | bash
 
 info "Installing Desktop Software"
 sleep 2
