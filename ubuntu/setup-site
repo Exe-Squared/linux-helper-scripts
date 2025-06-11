@@ -11,7 +11,7 @@ COLOR_RESET=$(tput sgr0)
 SILENT=false
 LARAVEL=false
 PUBLIC_DIR=""
-PHPVER=8.1
+PHPVER=8.3
 
 print() {
 	if [[ "${SILENT}" = false ]]; then
@@ -93,17 +93,10 @@ done
 
 if [[ -z $(command -v mkcert) ]]; then
     info "Mkcert not installed"
-    read -rp "Install now? (y/N): " confirmation
-    if [[ "${confirmation}" = [yY] || "${confirmation}" = [yY][eE][sS] ]]; then
-        sudo apt update
-        sudo apt install mkcert -y
-    else
-        error "Please install mkcert first"
-        usage
-        exit 1
-    fi
+    error "Please install mkcert first"
+    usage
+    exit 1
 fi
-
 
 if [[ -z $(command -v nginx) ]]; then
     info "Nginx not installed"
@@ -162,19 +155,19 @@ if [[ -z $(which "${PHP}") ]]; then
 	info "${PHP} not installed"
 	read -rp "Install now? (y/N): " confirm
 	if [[ "${confirm}" = [yY] || "${confirm}" = [yY][eE][sS] ]]; then
-        if [[ -z $(find /etc/apt -type f -iname "ondrej-ubuntu-php*") ]]; then
-            info "Adding ondrej/php ppa to the system repositories"
+            if [[ -z $(find /etc/apt -type f -iname "ondrej-ubuntu-php*") ]]; then
+                info "Adding ondrej/php ppa to the system repositories"
+                sleep 1
+                sudo apt update
+                sudo apt install software-properties-common -y
+                sudo add-apt-repository ppa:ondrej/php
+            fi
+	    sudo apt update
+            sudo apt install "${PHP}" "${PHP}-fpm" "${PHP}-cli" "${PHP}-imagick" "${PHP}-intl" "${PHP}-redis" "${PHP}-yaml" "${PHP}-zip" "${PHP}-gnupg" -y
+            sudo apt install "${PHP}-imap" "${PHP}-mysql" "${PHP}-gd" "${PHP}-mbstring" "${PHP}-curl" "${PHP}-xml" "${PHP}-bcmath" "${PHP}-xdebug" "${PHP}-pgsql" -y
+            wget --quiet -O - https://raw.githubusercontent.com/benmoses-dev/linux-helper-scripts/main/xdebug3.ini | sudo tee "/etc/php/${PHPVER}/mods-available/xdebug.ini"
+            print "PHP ${PHPVER} installed"
             sleep 1
-            sudo apt update
-            sudo apt install software-properties-common -y
-            sudo add-apt-repository ppa:ondrej/php
-        fi
-		sudo apt update
-        sudo apt install "${PHP}" "${PHP}-fpm" "${PHP}-cli" "${PHP}-imagick" "${PHP}-intl" "${PHP}-redis" "${PHP}-yaml" "${PHP}-zip" "${PHP}-gnupg" -y
-        sudo apt install "${PHP}-imap" "${PHP}-mysql" "${PHP}-gd" "${PHP}-mbstring" "${PHP}-curl" "${PHP}-xml" "${PHP}-bcmath" "${PHP}-xdebug" "${PHP}-pgsql" -y
-        wget --quiet -O - https://raw.githubusercontent.com/benmoses-dev/linux-helper-scripts/main/xdebug3.ini | sudo tee "/etc/php/${PHPVER}/mods-available/xdebug.ini"
-        print "PHP ${PHPVER} installed"
-        sleep 1
 	fi
 fi
 
@@ -205,16 +198,16 @@ info "Setting up nginx server block..."
 sleep 1
 cat <<EOL | sudo tee "/etc/nginx/sites-available/${PROJECT_NAME}"
 server {
-	listen 443 ssl;
-	listen [::]:443 ssl;
+    listen 443 ssl;
+    listen [::]:443 ssl;
  
     ssl_certificate ${CERTFILE}${DOMAIN}.pem;
     ssl_certificate_key ${KEYFILE}${DOMAIN}-key.pem;
 
-	server_name ${PROJECT_NAME}.local;
+    server_name ${PROJECT_NAME}.local;
     root ${PROJECT_DIR}${PUBLIC_DIR};
 
-	access_log /var/log/nginx/${PROJECT_NAME}-access.log;
+    access_log /var/log/nginx/${PROJECT_NAME}-access.log;
     error_log  /var/log/nginx/${PROJECT_NAME}-error.log error;
 
     add_header X-Frame-Options "SAMEORIGIN";
@@ -270,8 +263,8 @@ fi
 sudo nginx -t >/dev/null 2>&1
 NGINX_SUCCESS=$?
 if [[ $NGINX_SUCCESS -ne 0 ]]; then
-	error "Something went wrong with the nginx configuration"
-	error "Check the configuration file at /etc/nginx/sites-available/${PROJECT_NAME}"
+    error "Something went wrong with the nginx configuration"
+    error "Check the configuration file at /etc/nginx/sites-available/${PROJECT_NAME}"
     exit 1
 fi
 
