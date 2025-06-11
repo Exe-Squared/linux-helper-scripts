@@ -58,8 +58,8 @@ mkdir -p "${HOME}/.config"
 info "Configuring bash"
 sleep 2
 
-wget -O - https://raw.githubusercontent.com/benmoses-dev/linux-helper-scripts/main/.bash_aliases >"${HOME}/.bash_aliases"
-wget -O - https://raw.githubusercontent.com/benmoses-dev/linux-helper-scripts/main/.profile >"${HOME}/.profile"
+wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/.bash_aliases >"${HOME}/.bash_aliases"
+wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/.profile >"${HOME}/.profile"
 
 echo 'export EDITOR=nvim' >>"${HOME}/.bashrc"
 echo 'export FZF_DEFAULT_COMMAND="fdfind --hidden --no-ignore --exclude **/.git/*"' >>"${HOME}/.bashrc"
@@ -71,30 +71,30 @@ sleep 2
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 # install nvm, node, and npm
-wget -O - https://raw.githubusercontent.com/benmoses-dev/linux-helper-scripts/main/nvm-install.sh | bash
+wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/nvm-install.sh | bash
 
 # install composer
-wget -O - https://raw.githubusercontent.com/benmoses-dev/linux-helper-scripts/main/composer-install.sh | bash
+wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/composer-install.sh | bash
 
 info "Installing web server automation script"
 sleep 2
 
-wget -O - https://raw.githubusercontent.com/benmoses-dev/linux-helper-scripts/main/ubuntu/setup-site >"${HOME}/.local/bin/setup-site"
+wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/ubuntu/setup-site >"${HOME}/.local/bin/setup-site"
 chmod 755 "${HOME}/.local/bin/setup-site"
 
 info "Configuring tmux"
 sleep 2
 
-wget -O - https://raw.githubusercontent.com/benmoses-dev/linux-helper-scripts/main/ubuntu/tmux-sessionizer >"${HOME}/.local/bin/tmux-sessionizer"
+wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/ubuntu/tmux-sessionizer >"${HOME}/.local/bin/tmux-sessionizer"
 chmod 755 "${HOME}/.local/bin/tmux-sessionizer"
-wget -O - https://raw.githubusercontent.com/benmoses-dev/linux-helper-scripts/main/.tmux.conf >"${HOME}/.tmux.conf"
+wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/.tmux.conf >"${HOME}/.tmux.conf"
 
 info "Configuring vim and neovim"
 sleep 2
 
 # legacy vim config
-wget -O - https://raw.githubusercontent.com/benmoses-dev/linux-helper-scripts/main/.vimrc >"${HOME}/.vimrc"
-wget -O - https://raw.githubusercontent.com/benmoses-dev/linux-helper-scripts/main/.ideavimrc >"${HOME}/.ideavimrc"
+wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/.vimrc >"${HOME}/.vimrc"
+wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/.ideavimrc >"${HOME}/.ideavimrc"
 
 # neovim setup
 if [[ -n $(command -v nvim) ]]; then
@@ -119,7 +119,7 @@ else
 fi
 
 # install starship
-wget -O - https://raw.githubusercontent.com/benmoses-dev/linux-helper-scripts/main/starship-install.sh | bash
+wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/starship-install.sh | bash
 
 success "User software installed successfully!"
 sleep 1
