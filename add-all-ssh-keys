@@ -1,0 +1,13 @@
+#!/bin/bash
+
+echo "$SSH_AGENT_PID"
+echo "$SSH_AUTH_SOCK"
+
+# Ensure the SSH agent is running
+if [ -z "$SSH_AGENT_PID" ] || [ -z "$SSH_AUTH_SOCK" ]; then
+    eval "$(ssh-agent -s)"
+fi
+
+SSH_DIR="${HOME}/.ssh"
+
+find "${SSH_DIR}" -type f \( ! -name "*.pub" -a ! -name "config" \) -print0 | xargs -0 -P 12 -I '{}' add-ssh-key '{}'

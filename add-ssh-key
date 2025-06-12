@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+key="${1}"
+key_path=$(echo "$key" | awk -F '.ssh/' '{print $2}');
+pass_path="ssh/${key_path}"
+
+COLOR_RED=$(tput setaf 1)
+COLOR_GREEN=$(tput setaf 2)
+COLOR_RESET=$(tput sgr0)
+
+print() {
+    echo -e "$@"
+}
+
+error() {
+    print "${COLOR_RED}"
+    echo -n "${1}"
+    print "${COLOR_RESET}"
+}
+
+success() {
+    print "${COLOR_GREEN}"
+    echo -n "${1}"
+    print "${COLOR_RESET}"
+}
+
+if pass show "${pass_path}" &>/dev/null; then
+    # Retrieve the passphrase from pass
+    PASS=$(pass "${pass_path}")
+    # Check that the key has a passphrase
+    if [ -n "${PASS}" ]; then
+        success "Adding key with passphrase: ${key}"
+        # Use expect to interact with ssh-add and provide the password
+        PASS=$(printf '%q' "${PASS}")
+        expect << EOF
+spawn ssh-add "${key}"
+expect "Enter passphrase for ${key}:"
+send "${PASS}\n"
+expect eof
+EOF
+    fi
+else
+    error "No passphrase found for key: ${key} at ${pass_path}"
+fi
