@@ -56,24 +56,27 @@ dnf update -y
 info "Installing System Software"
 sleep 2
 
+dnf install epel-release -y
 dnf install gnupg git python3-devel vim shellcheck tmux ripgrep fd-find xclip trash-cli multitail tree jq rsync -y
 dnf install ca-certificates traceroute curl wget httpie -y
-dnf install neofetch htop sl bat hyperfine exa mariadb-server nginx -y
+dnf install neofetch htop sl bat hyperfine eza mariadb-server nginx -y
 
 systemctl enable --now nginx
 sed -i 's/#server_tokens/server_tokens/g' /etc/nginx/nginx.conf
 systemctl restart nginx
 
-# install docker
-# wget --quiet -O - https://raw.githubusercontent.com/benmoses-dev/linux-helper-scripts/main/docker-install.sh | bash
+info "Installing docker"
+wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/alma/install-docker.sh | bash
 
-if [[ -z $(command -v docker) ]]; then
-    error "Docker Not Installed!"
-    sleep 1
-fi
+info "Installing PHP"
+wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/alma/scripts/install-php.sh > "/home/$SUDO_USER/.local/bin/install-php"
+chown "$SUDO_USER:$SUDO_USER" "/home/$SUDO_USER/.local/bin/install-php"
+chmod +x "/home/$SUDO_USER/.local/bin/install-php"
 
-# install php
-# wget --quiet -O - https://raw.githubusercontent.com/benmoses-dev/linux-helper-scripts/main/php-install.sh | bash
+INSTALL_VERSIONS=("7.4" "8.0" "8.1" "8.2" "8.3" "8.4")
+for VERSION in ${INSTALL_VERSIONS[@]}; do
+  sudo -u "$SUDO_USER" bash -c "~/.local/bin/install-php $VERSION"
+done
 
 if [[ -z $(command -v php) ]]; then
     error "PHP Not Installed!"
