@@ -57,7 +57,7 @@ info "Installing System Software"
 sleep 2
 
 dnf install epel-release -y
-dnf copr enable tkbcopr/fd  # Enable fd package from Fedora cobr
+dnf copr enable tkbcopr/fd -y  # Enable fd package from Fedora cobr
 dnf install gnupg git python3-devel vim shellcheck tmux ripgrep fd multitail tree jq rsync fzf -y
 dnf install ca-certificates traceroute curl wget httpie -y
 dnf install neofetch htop sl bat hyperfine eza mariadb-server nginx -y
