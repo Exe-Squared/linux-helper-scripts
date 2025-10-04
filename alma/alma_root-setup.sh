@@ -65,7 +65,7 @@ dnf install htop bat mariadb-server nginx -y
 ## Install xclip from source
 info "Installing xclip from source"
 
-dnf install libXmu-devel libX11-devel -y
+dnf install libXmu-devel libX11-devel autoconf -y
 
 cd
 git clone https://github.com/astrand/xclip.git
