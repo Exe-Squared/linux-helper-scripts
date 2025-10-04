@@ -97,6 +97,7 @@ info "Installing docker"
 wget --quiet -O - "https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/alma/install-docker.sh" | bash
 
 info "Installing PHP"
+mkdir -p "/home/${SUDO_USER}/.local/bin"
 wget --quiet -O - "https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/alma/scripts/install-php.sh" > "/home/$SUDO_USER/.local/bin/install-php"
 chown "$SUDO_USER:$SUDO_USER" "/home/$SUDO_USER/.local/bin/install-php"
 chmod +x "/home/$SUDO_USER/.local/bin/install-php"
