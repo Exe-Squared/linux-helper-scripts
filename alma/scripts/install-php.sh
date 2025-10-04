@@ -67,7 +67,8 @@ sudo dnf install -y "$PHP" "${PHP}-php-fpm"
 
 info "Installing PHP Modules"
 
-sudo dnf install -y "${PHP}-php-pdo_mysql" "${PHP}-php-redis" "${PHP}-php-exif" "${PHP}-php-curl" \
+sudo dnf install -y \
+  "${PHP}-php-pdo" "${PHP}-php-pdo_mysql" "${PHP}-php-redis" "${PHP}-php-exif" "${PHP}-php-curl" \
   "${PHP}-php-pcntl" "${PHP}-php-posix" "${PHP}-php-zip" "${PHP}-php-json" "${PHP}-php-common" \
   "${PHP}-php-mbstring" "${PHP}-php-xml" "${PHP}-php-mysqlnd" "${PHP}-php-gd" "${PHP}-php-mysqli" \
   "${PHP}-php-bcmath" "${PHP}-php-imap" "${PHP}-php-imagick"
