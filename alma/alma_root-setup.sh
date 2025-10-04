@@ -68,7 +68,9 @@ info "Installing xclip from source"
 dnf install libXmu-devel libX11-devel autoconf -y
 
 cd
-git clone https://github.com/astrand/xclip.git
+if [[ ! -d ./xclip ]]; then
+  git clone https://github.com/astrand/xclip.git
+fi
 cd xclip
 ./bootstrap
 ./configure
@@ -79,7 +81,9 @@ rm -rf xclip
 
 ## Install trash-cli from source
 cd
-git clone https://github.com/andreafrancia/trash-cli.git
+if [[ ! -d ./trash-cli ]]; then
+  git clone https://github.com/andreafrancia/trash-cli.git
+fi
 cd trash-cli
 python3 setup.py install
 cd
