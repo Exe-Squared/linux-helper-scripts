@@ -56,28 +56,28 @@ fi
 PHP_VERSION="${1//.}"
 PHP="php$PHP_VERSION"
 
-info "Installing REMI GPG Key"
-
-sudo rpm --import "https://rpms.remirepo.net/enterprise/10/RPM-GPG-KEY-remi"
-sudo dnf clean all
-sudo dnf update -y
-
-info "Installing REMI Repository"
-
-sudo dnf install -y "https://rpms.remirepo.net/enterprise/remi-release-10.rpm"
+if [[ -d "/opt/remi/${PHP}" ]]; then
+  info "PHP $1 already installed"
+  exit 0
+fi
 
 info "Installing PHP and PHP-FPM"
 
 sudo dnf install -y "$PHP" "${PHP}-php-fpm"
 
-MODULES=("pdo" "pdo_mysql" "redis" "exif" "curl" "pcntl" "posix" "zip" "json" "common" "mbstring" "xml" "mysqlnd" "gd" "mysqli" "bcmath" "imap" "imagick")
-for MODULE in ${MODULES[@]}; do
-  info "Installing PHP ${MODULE}"
-  sudo dnf install "${PHP}-php-${MODULE}" -y
-done
+info "Installing PHP Modules"
+
+sudo dnf install "${PHP}-php-pdo_mysql" "${PHP}-php-redis" "${PHP}-php-exif" "${PHP}-php-curl" \
+  "${PHP}-php-pcntl" "${PHP}-php-posix" "${PHP}-php-zip" "${PHP}-php-json" "${PHP}-php-common" \
+  "${PHP}-php-mbstring" "${PHP}-php-xml" "${PHP}-php-mysqlnd" "${PHP}-php-gd" "${PHP}-php-mysqli" \
+  "${PHP}-php-bcmath" "${PHP}-php-imap" "${PHP}-php-imagick"
+
+sudo wget --quiet -O - https://raw.githubusercontent.com/benmoses-dev/linux-helper-scripts/main/xdebug3.ini > "/etc/opt/remi/${PHP}/php.d/xdebug.ini"
 
 sudo systemctl enable --now "${PHP}-php-fpm"
 
 cat <<EOL >> "${HOME}/.bash_aliases"
-alias php${PHP_VERSION}='sudo update-alternatives --set php /opt/remi/php${PHP_VERSION}/root/usr/bin/ph'
+alias php${PHP_VERSION}='sudo update-alternatives --set php /opt/remi/php${PHP_VERSION}/root/usr/bin/php'
 EOL
+
+sudo update-alternatives --set php "/opt/remi/php${PHP_VERSION}/root/usr/bin/php"

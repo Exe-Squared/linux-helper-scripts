@@ -97,15 +97,43 @@ info "Installing docker"
 wget --quiet -O - "https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/alma/install-docker.sh" | bash
 
 info "Installing PHP"
-mkdir -p "/home/${SUDO_USER}/.local/bin"
-wget --quiet -O - "https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/alma/scripts/install-php.sh" > "/home/$SUDO_USER/.local/bin/install-php"
-chown "$SUDO_USER:$SUDO_USER" "/home/$SUDO_USER/.local/bin/install-php"
-chmod +x "/home/$SUDO_USER/.local/bin/install-php"
+
+info "Installing REMI GPG Key"
+
+sudo rpm --import "https://rpms.remirepo.net/enterprise/10/RPM-GPG-KEY-remi"
+sudo dnf clean all
+sudo dnf update -y
+
+info "Installing REMI Repository"
+
+sudo dnf install -y "https://rpms.remirepo.net/enterprise/remi-release-10.rpm"
 
 INSTALL_VERSIONS=("7.4" "8.0" "8.1" "8.2" "8.3" "8.4")
 for VERSION in ${INSTALL_VERSIONS[@]}; do
   info "Installing PHP ${VERSION}"
-  sudo -u "$SUDO_USER" bash -c "~/.local/bin/install-php $VERSION"
+  info "Installing PHP and PHP-FPM"
+
+  VERSION_WO_DOT=${VERSION//.}
+  PHP="php${VERSION_WO_DOT}"
+
+  dnf install -y "$PHP" "${PHP}-php-fpm"
+
+  info "Installing PHP Modules"
+
+  dnf install "${PHP}-php-pdo_mysql" "${PHP}-php-redis" "${PHP}-php-exif" "${PHP}-php-curl" \
+    "${PHP}-php-pcntl" "${PHP}-php-posix" "${PHP}-php-zip" "${PHP}-php-json" "${PHP}-php-common" \
+    "${PHP}-php-mbstring" "${PHP}-php-xml" "${PHP}-php-mysqlnd" "${PHP}-php-gd" "${PHP}-php-mysqli" \
+    "${PHP}-php-bcmath" "${PHP}-php-imap" "${PHP}-php-imagick"
+  wget --quiet -O - https://raw.githubusercontent.com/benmoses-dev/linux-helper-scripts/main/xdebug3.ini > "/etc/opt/remi/${PHP}/php.d/xdebug.ini"
+
+
+  systemctl enable --now "${PHP}-php-fpm"
+
+  cat <<EOL >> "/home/${SUDO_USER}/.bash_aliases"
+  alias php${VERSION_WO_DOT}='sudo update-alternatives --set php /opt/remi/php${VERSION_WO_DOT}/root/usr/bin/php'
+EOL
+
+  update-alternatives --set php "/opt/remi/php${VERSION_WO_DOT}/root/usr/bin/php"
 done
 
 if [[ -z $(command -v php) ]]; then
