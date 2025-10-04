@@ -58,13 +58,13 @@ PHP="php$PHP_VERSION"
 
 info "Installing REMI GPG Key"
 
-sudo rpm --import "https://rpms.remirepo.net/enterprise/9/RPM-GPG-KEY-remi"
+sudo rpm --import "https://rpms.remirepo.net/enterprise/10/RPM-GPG-KEY-remi"
 sudo dnf clean all
 sudo dnf update -y
 
 info "Installing REMI Repository"
 
-sudo dnf install -y "https://rpms.remirepo.net/enterprise/remi-release-9.rpm"
+sudo dnf install -y "https://rpms.remirepo.net/enterprise/remi-release-10.rpm"
 
 info "Installing PHP and PHP-FPM"
 
@@ -78,4 +78,6 @@ done
 
 sudo systemctl enable --now "${PHP}-php-fpm"
 
-# Add alias to bash_aliases to
+cat <<EOL >> "${HOME}/.bash_aliases"
+alias php${PHP_VERSION}='sudo update-alternatives --set php /opt/remi/php${PHP_VERSION}/root/usr/bin/ph'
+EOL

@@ -66,15 +66,16 @@ sed -i 's/#server_tokens/server_tokens/g' /etc/nginx/nginx.conf
 systemctl restart nginx
 
 info "Installing docker"
-wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/alma/install-docker.sh | bash
+wget --quiet -O - "https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/alma/install-docker.sh" | bash
 
 info "Installing PHP"
-wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/alma/scripts/install-php.sh > "/home/$SUDO_USER/.local/bin/install-php"
+wget --quiet -O - "https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/alma/scripts/install-php.sh" > "/home/$SUDO_USER/.local/bin/install-php"
 chown "$SUDO_USER:$SUDO_USER" "/home/$SUDO_USER/.local/bin/install-php"
 chmod +x "/home/$SUDO_USER/.local/bin/install-php"
 
 INSTALL_VERSIONS=("7.4" "8.0" "8.1" "8.2" "8.3" "8.4")
 for VERSION in ${INSTALL_VERSIONS[@]}; do
+  info "Installing PHP ${VERSION}"
   sudo -u "$SUDO_USER" bash -c "~/.local/bin/install-php $VERSION"
 done
 
