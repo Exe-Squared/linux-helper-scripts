@@ -57,9 +57,28 @@ info "Installing System Software"
 sleep 2
 
 dnf install epel-release -y
-dnf install gnupg git python3-devel vim shellcheck tmux ripgrep fd-find xclip trash-cli multitail tree jq rsync -y
+dnf copr enable tkbcopr/fd  # Enable fd package from Fedora cobr
+dnf install gnupg git python3-devel vim shellcheck tmux ripgrep fd multitail tree jq rsync fzf -y
 dnf install ca-certificates traceroute curl wget httpie -y
 dnf install neofetch htop sl bat hyperfine eza mariadb-server nginx -y
+
+## Install xclip from source
+git clone https://github.com/astrand/xclip.git
+cd xclip
+./bootstrap
+./configure
+make
+make install
+cd
+rm -rf xclip
+
+## Install trash-cli from source
+cd
+git clone https://github.com/andreafrancia/trash-cli.git
+cd trash-cli
+python3 setup.py install
+cd
+rm -rf trash-cli
 
 systemctl enable --now nginx
 sed -i 's/#server_tokens/server_tokens/g' /etc/nginx/nginx.conf
