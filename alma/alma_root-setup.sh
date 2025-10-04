@@ -60,7 +60,7 @@ dnf install epel-release -y
 dnf copr enable tkbcopr/fd -y  # Enable fd package from Fedora cobr
 dnf install gnupg git python3-devel vim shellcheck tmux ripgrep fd multitail tree jq rsync fzf -y
 dnf install ca-certificates traceroute curl wget -y
-dnf install neofetch htop sl bat hyperfine eza mariadb-server nginx -y
+dnf install htop bat mariadb-server nginx -y
 
 ## Install xclip from source
 git clone https://github.com/astrand/xclip.git
