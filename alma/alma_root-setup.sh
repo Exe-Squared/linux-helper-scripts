@@ -58,14 +58,14 @@ sleep 2
 
 dnf install epel-release -y
 dnf copr enable tkbcopr/fd -y  # Enable fd package from Fedora cobr
-dnf install gnupg git python3-devel vim shellcheck tmux ripgrep fd multitail tree jq rsync fzf -y
+dnf install gcc make automake autoconf gnupg git python3-devel vim shellcheck tmux ripgrep fd multitail tree jq rsync fzf -y
 dnf install ca-certificates traceroute curl wget -y
 dnf install htop bat mariadb-server nginx -y
 
 ## Install xclip from source
 info "Installing xclip from source"
 
-dnf install libXmu-devel libX11-devel autoconf automake -y
+dnf install libXmu-devel libX11-devel -y
 
 cd
 if [[ ! -d ./xclip ]]; then
