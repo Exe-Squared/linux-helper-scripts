@@ -67,6 +67,7 @@ info "Installing xclip from source"
 
 dnf install libXmu-devel libX11-devel -y
 
+cd
 git clone https://github.com/astrand/xclip.git
 cd xclip
 ./bootstrap
