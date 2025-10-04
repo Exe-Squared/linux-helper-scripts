@@ -110,11 +110,16 @@ sudo dnf install -y "https://rpms.remirepo.net/enterprise/remi-release-10.rpm"
 
 INSTALL_VERSIONS=("7.4" "8.0" "8.1" "8.2" "8.3" "8.4")
 for VERSION in ${INSTALL_VERSIONS[@]}; do
+  VERSION_WO_DOT=${VERSION//.}
+    PHP="php${VERSION_WO_DOT}"
+
+  if [[ -d "/opt/remi/${PHP}" ]]; then
+    warning "PHP ${VERSION} already installed. Skipping..."
+    continue
+  fi
+
   info "Installing PHP ${VERSION}"
   info "Installing PHP and PHP-FPM"
-
-  VERSION_WO_DOT=${VERSION//.}
-  PHP="php${VERSION_WO_DOT}"
 
   dnf install -y "$PHP" "${PHP}-php-fpm"
 
@@ -124,14 +129,13 @@ for VERSION in ${INSTALL_VERSIONS[@]}; do
     "${PHP}-php-pdo" "${PHP}-php-pdo_mysql" "${PHP}-php-redis" "${PHP}-php-exif" "${PHP}-php-curl" \
     "${PHP}-php-pcntl" "${PHP}-php-posix" "${PHP}-php-zip" "${PHP}-php-json" "${PHP}-php-common" \
     "${PHP}-php-mbstring" "${PHP}-php-xml" "${PHP}-php-mysqlnd" "${PHP}-php-gd" "${PHP}-php-mysqli" \
-    "${PHP}-php-bcmath" "${PHP}-php-imap" "${PHP}-php-imagick"
+    "${PHP}-php-bcmath" "${PHP}-php-imap" "${PHP}-php-imagick" "${PHP}-php-devel"
   wget --quiet -O - https://raw.githubusercontent.com/benmoses-dev/linux-helper-scripts/main/xdebug3.ini > "/etc/opt/remi/${PHP}/php.d/xdebug.ini"
-
 
   systemctl enable --now "${PHP}-php-fpm"
 
   cat <<EOL >> "/home/${SUDO_USER}/.bash_aliases"
-  alias php${VERSION_WO_DOT}='sudo update-alternatives --set php /opt/remi/php${VERSION_WO_DOT}/root/usr/bin/php'
+  alias php${VERSION_WO_DOT}='sudo update-alternatives --set php /opt/remi/${PHP}/root/usr/bin/php && sudo update-alternatives --set phpize /opt/remi/${PHP}/root/usr/bin/phpize && sudo update-alternatives --set php-config /opt/remi/${PHP}/root/usr/bin/php-config && echo "PHP Updated to ${VERSION}"'
 EOL
 
   update-alternatives --set php "/opt/remi/php${VERSION_WO_DOT}/root/usr/bin/php"

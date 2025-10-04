@@ -71,14 +71,14 @@ sudo dnf install -y \
   "${PHP}-php-pdo" "${PHP}-php-pdo_mysql" "${PHP}-php-redis" "${PHP}-php-exif" "${PHP}-php-curl" \
   "${PHP}-php-pcntl" "${PHP}-php-posix" "${PHP}-php-zip" "${PHP}-php-json" "${PHP}-php-common" \
   "${PHP}-php-mbstring" "${PHP}-php-xml" "${PHP}-php-mysqlnd" "${PHP}-php-gd" "${PHP}-php-mysqli" \
-  "${PHP}-php-bcmath" "${PHP}-php-imap" "${PHP}-php-imagick"
+  "${PHP}-php-bcmath" "${PHP}-php-imap" "${PHP}-php-imagick" "${PHP}-php-devel"
 
 sudo wget --quiet -O - https://raw.githubusercontent.com/benmoses-dev/linux-helper-scripts/main/xdebug3.ini > "/etc/opt/remi/${PHP}/php.d/xdebug.ini"
 
 sudo systemctl enable --now "${PHP}-php-fpm"
 
 cat <<EOL >> "${HOME}/.bash_aliases"
-alias php${PHP_VERSION}='sudo update-alternatives --set php /opt/remi/php${PHP_VERSION}/root/usr/bin/php'
+alias php${VERSION_WO_DOT}='sudo update-alternatives --set php /opt/remi/${PHP}/root/usr/bin/php && sudo update-alternatives --set phpize /opt/remi/${PHP}/root/usr/bin/phpize && sudo update-alternatives --set php-config /opt/remi/${PHP}/root/usr/bin/php-config && echo "PHP Updated to ${VERSION}"'
 EOL
 
 sudo update-alternatives --set php "/opt/remi/php${PHP_VERSION}/root/usr/bin/php"
