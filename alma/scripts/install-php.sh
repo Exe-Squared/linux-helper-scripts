@@ -71,9 +71,9 @@ sudo dnf install -y \
   "${PHP}-php-pdo" "${PHP}-php-pdo_mysql" "${PHP}-php-redis" "${PHP}-php-exif" "${PHP}-php-curl" \
   "${PHP}-php-pcntl" "${PHP}-php-posix" "${PHP}-php-zip" "${PHP}-php-json" "${PHP}-php-common" \
   "${PHP}-php-mbstring" "${PHP}-php-xml" "${PHP}-php-mysqlnd" "${PHP}-php-gd" "${PHP}-php-mysqli" \
-  "${PHP}-php-bcmath" "${PHP}-php-imap" "${PHP}-php-imagick" "${PHP}-php-devel"
+  "${PHP}-php-bcmath" "${PHP}-php-imap" "${PHP}-php-imagick" "${PHP}-php-devel" "${PHP}-php-pecl-xdebug"
 
-sudo wget --quiet -O - https://raw.githubusercontent.com/benmoses-dev/linux-helper-scripts/main/xdebug3.ini > "/etc/opt/remi/${PHP}/php.d/xdebug.ini"
+sudo wget --quiet -O - https://raw.githubusercontent.com/benmoses-dev/linux-helper-scripts/main/xdebug3.ini > "/etc/opt/remi/${PHP}/php.d/15-xdebug.ini"
 
 sudo systemctl enable --now "${PHP}-php-fpm"
 
@@ -81,4 +81,21 @@ cat <<EOL >> "${HOME}/.bash_aliases"
 alias php${VERSION_WO_DOT}='sudo update-alternatives --set php /opt/remi/${PHP}/root/usr/bin/php && sudo update-alternatives --set phpize /opt/remi/${PHP}/root/usr/bin/phpize && sudo update-alternatives --set php-config /opt/remi/${PHP}/root/usr/bin/php-config && echo "PHP Updated to ${VERSION}"'
 EOL
 
-sudo update-alternatives --set php "/opt/remi/php${PHP_VERSION}/root/usr/bin/php"
+# Remove /usr/bin/php if it exists and is not a symlink
+if [ -e /usr/bin/php ] && ! [ -h /usr/bin/php ]; then
+  sudo unlink /usr/bin/php
+fi
+
+# Remove /usr/bin/phpize if it exists and is not a symlink
+if [ -e /usr/bin/phpize ] && ! [ -h /usr/bin/phpize ]; then
+  sudo unlink /usr/bin/phpize
+fi
+
+# Remove /usr/bin/php-config if it exists and is not a symlink
+if [ -e /usr/bin/php-config ] && ! [ -h /usr/bin/php-config ]; then
+  sudo unlink /usr/bin/php-config
+fi
+
+sudo update-alternatives --install /usr/bin/php php "/opt/remi/php${VERSION_WO_DOT}/root/usr/bin/php" "${VERSION_WO_DOT}"
+sudo update-alternatives --install /usr/bin/phpize phpize "/opt/remi/php${VERSION_WO_DOT}/root/usr/bin/phpize" "${VERSION_WO_DOT}"
+sudo update-alternatives --install /usr/bin/php-config php-config "/opt/remi/php${VERSION_WO_DOT}/root/usr/bin/php-config" "${VERSION_WO_DOT}"

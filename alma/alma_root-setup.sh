@@ -129,8 +129,8 @@ for VERSION in ${INSTALL_VERSIONS[@]}; do
     "${PHP}-php-pdo" "${PHP}-php-pdo_mysql" "${PHP}-php-redis" "${PHP}-php-exif" "${PHP}-php-curl" \
     "${PHP}-php-pcntl" "${PHP}-php-posix" "${PHP}-php-zip" "${PHP}-php-json" "${PHP}-php-common" \
     "${PHP}-php-mbstring" "${PHP}-php-xml" "${PHP}-php-mysqlnd" "${PHP}-php-gd" "${PHP}-php-mysqli" \
-    "${PHP}-php-bcmath" "${PHP}-php-imap" "${PHP}-php-imagick" "${PHP}-php-devel"
-  wget --quiet -O - https://raw.githubusercontent.com/benmoses-dev/linux-helper-scripts/main/xdebug3.ini > "/etc/opt/remi/${PHP}/php.d/xdebug.ini"
+    "${PHP}-php-bcmath" "${PHP}-php-imap" "${PHP}-php-imagick" "${PHP}-php-devel" "${PHP}-php-pecl-xdebug"
+  wget --quiet -O - https://raw.githubusercontent.com/benmoses-dev/linux-helper-scripts/main/xdebug3.ini > "/etc/opt/remi/${PHP}/php.d/15-xdebug.ini"
 
   systemctl enable --now "${PHP}-php-fpm"
 
@@ -139,7 +139,19 @@ for VERSION in ${INSTALL_VERSIONS[@]}; do
     unlink /usr/bin/php
   fi
 
+  # Remove /usr/bin/phpize if it exists and is not a symlink
+  if [ -e /usr/bin/phpize ] && ! [ -h /usr/bin/phpize ]; then
+    unlink /usr/bin/phpize
+  fi
+
+  # Remove /usr/bin/php-config if it exists and is not a symlink
+  if [ -e /usr/bin/php-config ] && ! [ -h /usr/bin/php-config ]; then
+    unlink /usr/bin/php-config
+  fi
+
   update-alternatives --install /usr/bin/php php "/opt/remi/php${VERSION_WO_DOT}/root/usr/bin/php" "${VERSION_WO_DOT}"
+  update-alternatives --install /usr/bin/phpize phpize "/opt/remi/php${VERSION_WO_DOT}/root/usr/bin/phpize" "${VERSION_WO_DOT}"
+  update-alternatives --install /usr/bin/php-config php-config "/opt/remi/php${VERSION_WO_DOT}/root/usr/bin/php-config" "${VERSION_WO_DOT}"
 done
 
 if [[ -z $(command -v php) ]]; then
