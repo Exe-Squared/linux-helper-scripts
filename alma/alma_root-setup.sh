@@ -134,11 +134,7 @@ for VERSION in ${INSTALL_VERSIONS[@]}; do
 
   systemctl enable --now "${PHP}-php-fpm"
 
-  cat <<EOL >> "/home/${SUDO_USER}/.bash_aliases"
-  alias php${VERSION_WO_DOT}='sudo update-alternatives --set php /opt/remi/${PHP}/root/usr/bin/php && sudo update-alternatives --set phpize /opt/remi/${PHP}/root/usr/bin/phpize && sudo update-alternatives --set php-config /opt/remi/${PHP}/root/usr/bin/php-config && echo "PHP Updated to ${VERSION}"'
-EOL
-
-  update-alternatives --set php "/opt/remi/php${VERSION_WO_DOT}/root/usr/bin/php"
+  update-alternatives --install /usr/bin/php php "/opt/remi/php${VERSION_WO_DOT}/root/usr/bin/php" "${VERSION_WO_DOT}"
 done
 
 if [[ -z $(command -v php) ]]; then
