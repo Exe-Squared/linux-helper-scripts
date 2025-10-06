@@ -134,6 +134,11 @@ for VERSION in ${INSTALL_VERSIONS[@]}; do
 
   systemctl enable --now "${PHP}-php-fpm"
 
+  # Remove /usr/bin/php if it exists and is not a symlink
+  if [ -e /usr/bin/php ] && ! [ -h /usr/bin/php ]; then
+    unlink /usr/bin/php
+  fi
+
   update-alternatives --install /usr/bin/php php "/opt/remi/php${VERSION_WO_DOT}/root/usr/bin/php" "${VERSION_WO_DOT}"
 done
 
