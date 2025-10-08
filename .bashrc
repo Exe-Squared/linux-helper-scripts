@@ -10,7 +10,9 @@ esac
 
 if [[ -n $(command -v tmux) ]] && [[ -n "$PS1" ]] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [[ -z "$TMUX" ]]; then
     session_name=$(basename "${HOME}" | tr . _ | tr [:space:] _)
-    exec tmux new -A -s "$session_name" -c "${HOME}"
+
+    # Uncomment the line below if you want to use tmux by default
+    # exec tmux new -A -s "$session_name" -c "${HOME}"
 fi
 
 # don't put duplicate lines or lines starting with space in the history.

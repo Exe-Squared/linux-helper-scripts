@@ -88,7 +88,7 @@ chmod 755 "${HOME}/.local/bin/setup-site"
 info "Configuring tmux"
 sleep 2
 
-wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/ubuntu/tmux-sessionizer >"${HOME}/.local/bin/tmux-sessionizer"
+wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/alma/files/tmux-sessionizer >"${HOME}/.local/bin/tmux-sessionizer"
 chmod 755 "${HOME}/.local/bin/tmux-sessionizer"
 wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/.tmux.conf >"${HOME}/.tmux.conf"
 
@@ -145,9 +145,11 @@ fi
 # Install scripts
 wget -O "$HOME/.local/bin/compare-env" https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/alma/files/compare-env.py
 wget -O "$HOME/.local/bin/get-image" https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/alma/files/get-image
+wget -O "$HOME/.local/bin/install-php" https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/alma/files/install-php.sh
 
 chmod +x "$HOME/.local/bin/compare-env"
 chmod +x "$HOME/.local/bin/get-image"
+chmod +x "$HOME/.local/bin/install-php"
 
 success "User software installed successfully!"
 sleep 1

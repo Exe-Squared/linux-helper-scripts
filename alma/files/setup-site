@@ -171,6 +171,10 @@ fi
 
 KEYFILE="/etc/ssl/private/"
 CERTFILE="/etc/ssl/certs/"
+
+sudo mkdir -p $KEYFILE
+sudo mkdir -p $CERTFILE
+
 DOMAIN="${PROJECT_NAME}.local"
 if [ ! -f "${CERTFILE}" ]; then
     info "Generating new self signed certificate"
@@ -192,7 +196,7 @@ cat <<EOL | sudo tee "/etc/httpd/conf.d/${PROJECT_NAME}.conf"
 
   DocumentRoot ${PROJECT_DIR}${PUBLIC_DIR}
 
-  <Directory ${PROJECT_DIR}{$PUBLIC_DIR}>
+  <Directory ${PROJECT_DIR}${PUBLIC_DIR}>
     Options FollowSymlinks
     AllowOverride All
     Require all granted
@@ -207,8 +211,8 @@ cat <<EOL | sudo tee "/etc/httpd/conf.d/${PROJECT_NAME}.conf"
   ErrorLog /var/log/httpd/${PROJECT_NAME}-error.log
   CustomLog /var/log/httpd/${PROJECT_NAME}-access.log combined
 
-  SSLCertificateFile ${CERTFILE}
-  SSLCertificateKey ${CERTKEY}
+  SSLCertificateFile ${CERTFILE}${DOMAIN}.pem
+  SSLCertificateKeyFile ${KEYFILE}${DOMAIN}-key.pem
 </VirtualHost>
 </IfModule>
 
@@ -230,7 +234,7 @@ cat <<EOL | sudo tee "/etc/httpd/conf.d/${PROJECT_NAME}.conf"
 
   LogFormat "%a %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
   ErrorLog /var/log/httpd/${PROJECT_NAME}-error.log
-  CustomLog /var/log/httpd/$PROJECT_NAME}-access.log combined
+  CustomLog /var/log/httpd/${PROJECT_NAME}-access.log combined
 
   <IfModule mod_ssl.c>
     RewriteEngine on
@@ -244,9 +248,8 @@ EOL
 info "Restarting apache..."
 sleep 1
 
-sudo httpd -t >/dev/null 2>&1
-NGINX_SUCCESS=$?
-if [[ $NGINX_SUCCESS -ne 0 ]]; then
+
+if ! sudo httpd -t >/dev/null 2>&1; then
     error "Something went wrong with the apache configuration"
     error "Check the configuration file at /etc/httpd/conf.d/${PROJECT_NAME}.conf"
     exit 1
@@ -256,10 +259,17 @@ sudo systemctl reload httpd
 
 if [[ -n $(command -v hostctl) ]]; then
     sudo hostctl add domains local "${DOMAIN}"
+
+    print "${COLOR_GREEN}"
+    print "Done! Go to ${PROJECT_NAME}.local to test the site"
+    print "${COLOR_RESET}"
+else
+  print "${COLOR_BLUE}"
+  print "Almost there! hostctl is not installed"
+  print "Add the following to /etc/hosts to access your local site"
+  print "127.0.0.1 ${DOMAIN}"
+  print "${COLOR_RESET}"
 fi
 
-print "${COLOR_GREEN}"
-print "Done! Go to ${PROJECT_NAME}.local to test the site"
-print "${COLOR_RESET}"
 
 sleep 1

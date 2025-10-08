@@ -44,7 +44,6 @@ chwindows() {
 
 alias cp='cp -i'
 alias mv='mv -i'
-alias rm='trash -v'
 alias mkdir='mkdir -p'
 alias ps='ps auxf'
 alias ping='ping -c 10'
@@ -52,7 +51,6 @@ alias less='less -R'
 alias multitail='multitail --no-repeat -c'
 alias vi='nvim'
 alias vim='nvim'
-alias bat='batcat'
 alias _copy='xclip -selection clipboard -i'
 alias _paste='xclip -selection clipboard -o'
 
@@ -156,6 +154,7 @@ alias to-project='cd $(find "${HOME}" -mindepth 2 -maxdepth 2 -type d -not -path
 alias libreoffice='/var/lib/flatpak/exports/bin/org.libreoffice.LibreOffice'
 alias exceltocsv='libreoffice --headless --convert-to csv'
 alias rmlogs='rm -f *.log'
+alias c=clear
 
 alias nrd='npm run dev'
 alias nrb='npm run build'

@@ -17,3 +17,18 @@ wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scr
 ```
 wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/ubuntu/ubuntu_2204_user-setup.sh | bash
 ```
+
+## Almalinux 10
+
+```shell
+wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/alma/alma_root_setup.sh | sudo bash
+```
+
+```shell
+wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/alma/alma_user_setup.sh | bash
+```
+
+Reboot to have changes apply properly
+```shell
+reboot
+```
