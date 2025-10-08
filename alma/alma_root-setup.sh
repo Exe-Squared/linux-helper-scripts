@@ -60,7 +60,7 @@ dnf install epel-release -y
 dnf copr enable tkbcopr/fd -y  # Enable fd package from Fedora cobr
 dnf install gcc make automake autoconf gnupg git python3-devel vim shellcheck tmux ripgrep fd multitail tree jq rsync fzf -y
 dnf install ca-certificates traceroute curl wget -y
-dnf install htop bat mariadb-server httpd mod_ssl -y
+dnf install htop bat mariadb-server httpd mod_ssl golang-bin -y
 
 ## Install xclip from source
 info "Installing xclip from source"
@@ -144,16 +144,6 @@ done
 if [[ -z $(command -v php) ]]; then
     error "PHP Not Installed!"
     sleep 1
-fi
-
-if [[ -z $(command -v /usr/local/go/bin/go) ]]; then
-  info "Installing go"
-
-  wget --quiet -O /root/go.tar.gz "https://go.dev/dl/go1.25.2.linux-amd64.tar.gz"
-  rm -rf /usr/local/go && tar -C /usr/local -xzf /root/go.tar.gz
-  unlink /root/go.tar.gz
-
-  success "Installed go version $(/usr/local/go/bin/go version)"
 fi
 
 success "System Software Install Finished!"
