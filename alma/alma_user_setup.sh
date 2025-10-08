@@ -125,7 +125,7 @@ fi
 wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/starship-install.sh | bash
 
 # install mkcert
-if [[ -z $(comamnd -v mkcert) ]]; then
+if [[ -z $(command -v mkcert) ]]; then
   info "Installing mkcert"
 
   if [[ -z $(command -v go) ]]; then
