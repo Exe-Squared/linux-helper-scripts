@@ -124,5 +124,19 @@ fi
 # install starship
 wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/starship-install.sh | bash
 
+# install mkcert
+if [[ -z $(comamnd -v mkcert) ]]; then
+  info "Installing mkcert"
+
+  if [[ -z $(command -v go) ]]; then
+    error "Go not installed"
+    exit 1
+  fi
+
+  go install filippo.io/mkcert@latest
+
+  info "mkcert installed"
+fi
+
 success "User software installed successfully!"
 sleep 1
