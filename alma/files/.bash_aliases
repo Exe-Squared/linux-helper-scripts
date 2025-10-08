@@ -138,10 +138,28 @@ function artisan() {
 alias art=artisan
 alias xoff='sudo phpdismod -s cli xdebug'
 alias xon='sudo phpenmod -s cli xdebug'
-alias php74='sudo update-alternatives --set php /opt/remi/php74/root/usr/bin/php && sudo update-alternatives --set phpize /opt/remi/php74/root/usr/bin/phpize && sudo update-alternatives --set php-config /opt/remi/php74/root/usr/bin/php-config && echo "PHP Updated to 7.4"'
-alias php80='sudo update-alternatives --set php /opt/remi/php80/root/usr/bin/php && sudo update-alternatives --set phpize /opt/remi/php80/root/usr/bin/phpize && sudo update-alternatives --set php-config /opt/remi/php80/root/usr/bin/php-config && echo "PHP Updated to 8.0"'
-alias php81='sudo update-alternatives --set php /opt/remi/php81/root/usr/bin/php && sudo update-alternatives --set phpize /opt/remi/php81/root/usr/bin/phpize && sudo update-alternatives --set php-config /opt/remi/php81/root/usr/bin/php-config && echo "PHP Updated to 8.1"'
-alias php82='sudo update-alternatives --set php /opt/remi/php82/root/usr/bin/php && sudo update-alternatives --set phpize /opt/remi/php82/root/usr/bin/phpize && sudo update-alternatives --set php-config /opt/remi/php82/root/usr/bin/php-config && echo "PHP Updated to 8.2"'
-alias php83='sudo update-alternatives --set php /opt/remi/php83/root/usr/bin/php && sudo update-alternatives --set phpize /opt/remi/php83/root/usr/bin/phpize && sudo update-alternatives --set php-config /opt/remi/php83/root/usr/bin/php-config && echo "PHP Updated to 8.3"'
-alias php84='sudo update-alternatives --set php /opt/remi/php84/root/usr/bin/php && sudo update-alternatives --set phpize /opt/remi/php84/root/usr/bin/phpize && sudo update-alternatives --set php-config /opt/remi/php84/root/usr/bin/php-config && echo "PHP Updated to 8.4"'
+
+function toggle-php() {
+    if [ -n "$1" ]; then
+        return 1
+    fi
+
+    if [ -d "/opt/remi/php$1" ]; then
+        echo "That version of PHP is not installed"
+        return 2
+    fi
+
+    sudo update-alternatives --set php "/opt/remi/php$1/root/usr/bin/php"
+    sudo update-alternatives --set phpize "/opt/remi/php$1/root/usr/bin/phpize"
+    sudo update-alternatives --set php-config "/opt/remi/php$1/root/usr/bin/php-config"
+
+    echo "PHP set to $1"
+}
+
+alias php74="toggle-php 74"
+alias php80="toggle-php 80"
+alias php81="toggle-php 81"
+alias php82="toggle-php 82"
+alias php83="toggle-php 83"
+alias php84="toggle-php 84"
 

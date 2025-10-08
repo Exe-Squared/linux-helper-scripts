@@ -73,12 +73,12 @@ sudo dnf install -y \
   "${PHP}-php-mbstring" "${PHP}-php-xml" "${PHP}-php-mysqlnd" "${PHP}-php-gd" "${PHP}-php-mysqli" \
   "${PHP}-php-bcmath" "${PHP}-php-imap" "${PHP}-php-imagick" "${PHP}-php-devel" "${PHP}-php-pecl-xdebug"
 
-sudo wget --quiet -O - https://raw.githubusercontent.com/benmoses-dev/linux-helper-scripts/main/xdebug3.ini > "/etc/opt/remi/${PHP}/php.d/15-xdebug.ini"
+sudo wget --quiet -O - https://raw.githubusercontent.com/benmoses-dev/linux-helper-scripts/main/xdebug3.ini | sudo tee "/etc/opt/remi/${PHP}/php.d/15-xdebug.ini"
 
 sudo systemctl enable --now "${PHP}-php-fpm"
 
 cat <<EOL >> "${HOME}/.bash_aliases"
-alias php${VERSION_WO_DOT}='sudo update-alternatives --set php /opt/remi/${PHP}/root/usr/bin/php && sudo update-alternatives --set phpize /opt/remi/${PHP}/root/usr/bin/phpize && sudo update-alternatives --set php-config /opt/remi/${PHP}/root/usr/bin/php-config && echo "PHP Updated to ${VERSION}"'
+alias php${VERSION_WO_DOT}='toggle-php ${VERSION_WO_DOT}'
 EOL
 
 # Remove /usr/bin/php if it exists and is not a symlink

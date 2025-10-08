@@ -60,7 +60,7 @@ dnf install epel-release -y
 dnf copr enable tkbcopr/fd -y  # Enable fd package from Fedora cobr
 dnf install gcc make automake autoconf gnupg git python3-devel vim shellcheck tmux ripgrep fd multitail tree jq rsync fzf -y
 dnf install ca-certificates traceroute curl wget -y
-dnf install htop bat mariadb-server nginx -y
+dnf install htop bat mariadb-server httpd mod_ssl -y
 
 ## Install xclip from source
 info "Installing xclip from source"
@@ -79,25 +79,12 @@ make install
 cd
 rm -rf xclip
 
-## Install trash-cli from source
-cd
-if [[ ! -d ./trash-cli ]]; then
-  git clone https://github.com/andreafrancia/trash-cli.git
-fi
-cd trash-cli
-python3 setup.py install
-cd
-rm -rf trash-cli
-
-systemctl enable --now nginx
-sed -i 's/#server_tokens/server_tokens/g' /etc/nginx/nginx.conf
-systemctl restart nginx
+systemctl enable --now httpd
 
 info "Installing docker"
 wget --quiet -O - "https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/alma/install-docker.sh" | bash
 
 info "Installing PHP"
-
 info "Installing REMI GPG Key"
 
 sudo rpm --import "https://rpms.remirepo.net/enterprise/10/RPM-GPG-KEY-remi"
