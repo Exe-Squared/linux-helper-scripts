@@ -142,5 +142,12 @@ fi
 ~/.cargo/bin/cargo install --locked hyperfine
 ~/.cargo/bin/cargo install eza
 
+# Install scripts
+wget -O "/home/$HOME/.local/bin/compare-env" https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/alma/files/compare-env.py
+wget -O "/home/$HOME/.local/bin/get-image" https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/alma/files/get-image
+
+chmod +x "/home/$HOME/.local/bin/compare-env"
+chmod +x "/home/$HOME/.local/bin/get-image"
+
 success "User software installed successfully!"
 sleep 1

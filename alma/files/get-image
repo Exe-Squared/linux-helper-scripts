@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+set -e
+
+# Check if the correct number of arguments are provided
+if [ "$#" -ne 2 ] && [ "$#" -ne 3 ]; then
+    echo "Usage: $0 <width> <height> <output_path?>"
+    exit 1
+fi
+
+# Assign command-line arguments to variables
+WIDTH=$1
+HEIGHT=$2
+OUTPUT_DIR="/home/$HOME/Pictures/"
+
+if [ -n "$3" ]; then
+    OUTPUT_DIR="$3"
+fi
+
+# Output file where the image will be saved
+OUTPUT_FILE="random_image_${WIDTH}x${HEIGHT}.jpg"
+
+# Request URL for the random image with specified dimensions
+URL="https://picsum.photos/${WIDTH}/${HEIGHT}"
+
+# Use curl to download the image
+echo "Downloading a random image to $OUTPUT_DIR$OUTPUT_FILE"
+curl -L -o "$OUTPUT_DIR$OUTPUT_FILE" "$URL"
+
+# Check if the download was successful
+if [ $? -eq 0 ]; then
+    echo "Image downloaded successfully"
+else
+    echo "Failed to download the image"
+fi
+

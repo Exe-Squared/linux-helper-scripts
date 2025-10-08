@@ -96,7 +96,7 @@ info "Installing REMI Repository"
 sudo dnf install -y "https://rpms.remirepo.net/enterprise/remi-release-10.rpm"
 
 INSTALL_VERSIONS=("7.4" "8.0" "8.1" "8.2" "8.3" "8.4")
-for VERSION in ${INSTALL_VERSIONS[@]}; do
+for VERSION in "${INSTALL_VERSIONS[@]}"; do
   VERSION_WO_DOT=${VERSION//.}
     PHP="php${VERSION_WO_DOT}"
 
@@ -145,6 +145,16 @@ if [[ -z $(command -v php) ]]; then
     error "PHP Not Installed!"
     sleep 1
 fi
+
+# Install Desktop Software
+info "Installing desktop software"
+
+dnf install vlc gnome-tweaks -y
+
+info "Installing Libreoffice"
+
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+flatpak install flathub org.libreoffice.LibreOffice -y
 
 info "Disable SELinux"
 setenforce 0

@@ -53,7 +53,6 @@ alias multitail='multitail --no-repeat -c'
 alias vi='nvim'
 alias vim='nvim'
 alias bat='batcat'
-alias fd='fdfind'
 alias _copy='xclip -selection clipboard -i'
 alias _paste='xclip -selection clipboard -o'
 
@@ -135,17 +134,14 @@ ftext ()
 function artisan() {
     php artisan "$@"
 }
-alias art=artisan
-alias xoff='sudo phpdismod -s cli xdebug'
-alias xon='sudo phpenmod -s cli xdebug'
 
 function toggle-php() {
-    if [ -n "$1" ]; then
+    if [ -z "$1" ]; then
         return 1
     fi
 
-    if [ -d "/opt/remi/php$1" ]; then
-        echo "That version of PHP is not installed"
+    if [ ! -d "/opt/remi/php$1" ]; then
+        echo "PHP $1 is not installed"
         return 2
     fi
 
@@ -156,6 +152,18 @@ function toggle-php() {
     echo "PHP set to $1"
 }
 
+alias to-project='cd $(find "${HOME}" -mindepth 2 -maxdepth 2 -type d -not -path "*/.*" | fzf)'
+alias libreoffice='/var/lib/flatpak/exports/bin/org.libreoffice.LibreOffice'
+alias exceltocsv='libreoffice --headless --convert-to csv'
+alias rmlogs='rm -f *.log'
+
+alias nrd='npm run dev'
+alias nrb='npm run build'
+
+alias art=artisan
+alias xoff='sudo phpdismod -s cli xdebug'
+alias xon='sudo phpenmod -s cli xdebug'
+alias xphp="XDEBUG_MODE=debug XDEBUG_SESSION=1 php"
 alias php74="toggle-php 74"
 alias php80="toggle-php 80"
 alias php81="toggle-php 81"
@@ -163,3 +171,5 @@ alias php82="toggle-php 82"
 alias php83="toggle-php 83"
 alias php84="toggle-php 84"
 
+alias pma-up='docker run --name phpmyadmin -d -e PMA_ARBITRARY=1 -p 8080:80 phpmyadmin'
+alias pma-down='docker rm phpmyadmin --force'
