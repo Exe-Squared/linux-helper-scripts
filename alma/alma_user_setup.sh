@@ -105,7 +105,7 @@ if [[ -n $(command -v nvim) ]]; then
 	sleep 1
 else
 	if [[ ! -f "${HOME}/.local/bin/nvim" ]]; then
-		wget --quiet -O "${HOME}/.local/bin/nvim" https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+		wget --quiet -O "${HOME}/.local/bin/nvim" https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage
 		chmod u+x "${HOME}/.local/bin/nvim"
 	fi
 	if [[ ! -d "${HOME}/.config/nvim" ]]; then
