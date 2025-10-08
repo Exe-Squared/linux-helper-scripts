@@ -154,7 +154,7 @@ dnf install vlc gnome-tweaks -y
 info "Installing Libreoffice"
 
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-flatpak install flathub org.libreoffice.LibreOffice -y
+flatpak install flathub org.libreoffice.LibreOffice -y > /dev/null
 
 info "Disable SELinux"
 setenforce 0
