@@ -138,5 +138,9 @@ if [[ -z $(command -v mkcert) ]]; then
   info "mkcert installed"
 fi
 
+# install binaries via cargo
+cargo install --locked hyperfine
+cargo install eza
+
 success "User software installed successfully!"
 sleep 1

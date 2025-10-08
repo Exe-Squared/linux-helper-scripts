@@ -146,5 +146,9 @@ if [[ -z $(command -v php) ]]; then
     sleep 1
 fi
 
+info "Disable SELinux"
+setenforce 0
+sed -i "s/SELINUX=enforcing/SELINUX=disabled/g" /etc/selinux/config
+
 success "System Software Install Finished!"
 sleep 1
