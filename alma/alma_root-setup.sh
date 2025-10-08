@@ -149,8 +149,9 @@ fi
 if [[ -z $(command -v /usr/local/go/bin/go) ]]; then
   info "Installing go"
 
-  wget --quiet -O "~/go.tar.gz" "https://go.dev/dl/go1.25.2.linux-amd64.tar.gz"
-  rm -rf /usr/local/go && tar -C /usr/local -xzf "~/go.tar.gz"
+  wget --quiet -O /root/go.tar.gz "https://go.dev/dl/go1.25.2.linux-amd64.tar.gz"
+  rm -rf /usr/local/go && tar -C /usr/local -xzf /root/go.tar.gz
+  unlink /root/go.tar.gz
 
   success "Installed go version $(/usr/local/go/bin/go version)"
 fi
