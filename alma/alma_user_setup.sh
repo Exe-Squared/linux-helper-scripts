@@ -96,8 +96,8 @@ info "Configuring vim and neovim"
 sleep 2
 
 # legacy vim config
-wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/.vimrc >"${HOME}/.vimrc"
-wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/.ideavimrc >"${HOME}/.ideavimrc"
+wget -O "${HOME}/.vimrc" https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/.vimrc
+wget -O "${HOME}/.ideavimrc" https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/.ideavimrc
 
 # neovim setup
 if [[ -n $(command -v nvim) ]]; then
@@ -139,8 +139,8 @@ if [[ -z $(command -v mkcert) ]]; then
 fi
 
 # install binaries via cargo
-cargo install --locked hyperfine
-cargo install eza
+~/.cargo/bin/cargo install --locked hyperfine
+~/.cargo/bin/cargo install eza
 
 success "User software installed successfully!"
 sleep 1
