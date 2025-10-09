@@ -58,7 +58,7 @@ sleep 2
 
 dnf install epel-release -y
 dnf copr enable tkbcopr/fd -y  # Enable fd package from Fedora cobr
-dnf install gcc make automake autoconf gnupg git python3-devel vim shellcheck tmux ripgrep fd multitail tree jq rsync fzf -y
+dnf install gcc make automake autoconf gnupg git python3-devel vim shellcheck tmux ripgrep fd multitail tree jq yq rsync fzf -y
 dnf install ca-certificates traceroute curl wget -y
 dnf install htop bat mariadb-server httpd mod_ssl golang-bin -y
 
