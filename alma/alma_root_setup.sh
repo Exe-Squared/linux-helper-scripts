@@ -146,6 +146,25 @@ if [[ -z $(command -v php) ]]; then
     sleep 1
 fi
 
+# Install redis
+info "Installing Redis"
+
+cat <<EOF | sudo tee "/etc/yum.repos.d/redis.repo"
+[Redis]
+name=Redis
+baseurl=http://packages.redis.io/rpm/rockylinux9
+enabled=1
+gpgcheck=1
+EOF
+
+curl -fsSL https://packages.redis.io/gpg > /tmp/redis.key
+sudo rpm --import /tmp/redis.key
+sudo dnf install redis -y
+
+systemctl enable --now redis
+
+info "Redis installed"
+
 # Install Desktop Software
 info "Installing desktop software"
 
