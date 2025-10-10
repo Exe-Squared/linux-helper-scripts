@@ -208,6 +208,7 @@ WORKDIR /var/www
 
 # Expose FPM port
 EXPOSE 9000
+EXPOSE 9003
 
 # Start PHP-FPM
 CMD ["php-fpm"]
