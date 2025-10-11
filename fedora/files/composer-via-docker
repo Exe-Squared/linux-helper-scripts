@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+
+set -e
+
+# Colours
+COLOR_RED=$(tput setaf 1)
+COLOR_GREEN=$(tput setaf 2)
+COLOR_YELLOW=$(tput setaf 3)
+COLOR_BLUE=$(tput setaf 4)
+COLOR_RESET=$(tput sgr0)
+
+print() {
+  echo -e "$@"
+}
+
+usage() {
+	printf "%s\n" \
+		"composer-via-docker <PHP Version> [Composer arguments ...]" \
+		"" \
+		"Execute composer commands in the current directory of a docker container"
+
+    printf "\t%s\n\t\t%s\n\n" \
+        "The PHP Version must be in the format number.number" \
+        "E.G. 8.1"
+}
+
+error() {
+    print "${COLOR_RED}"
+    print "${1}"
+    print "${COLOR_RESET}"
+}
+
+info() {
+    print "${COLOR_YELLOW}"
+    print "${1}"
+    print "${COLOR_RESET}"
+}
+
+if [[ "$EUID" -eq 0 ]]; then
+    error "Do not run this script as root"
+    usage
+	exit 1
+fi
+
+if [[ "$#" -lt 1 ]]; then
+  error "At least one argument is expected"
+  usage
+  exit 1
+fi
+
+if ! [[ $1 =~ ^[0-9]+\.[0-9]+$ ]]; then
+  error "The PHP Version must be formatted with a dot"
+  usage
+  exit 1
+fi
+
+docker exec -it -w "$(pwd)" "php${1//.}-fpm" composer ${@:2}
+
+chown "$USER:$USER" composer.lock || info "Composer.lock not found"
+chown -R "$USER:$USER" vendor || info "Vendor directory not found"

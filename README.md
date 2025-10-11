@@ -32,3 +32,18 @@ Reboot to have changes apply properly
 ```shell
 reboot
 ```
+
+## Fedora 42
+
+```shell
+wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/fedora/root_setup.sh | sudo bash
+```
+
+```shell
+wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/fedora/user_setup.sh | bash
+```
+
+Reboot to have changes apply properly
+```shell
+reboot
+```
