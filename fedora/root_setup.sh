@@ -63,7 +63,7 @@ dnf install htop bat mariadb-server httpd mod_ssl golang-bin xclip trash-cli -y
 systemctl enable --now httpd
 
 info "Installing docker"
-wget --quiet -O - "https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/alma/install-docker-fedora.sh" | bash
+wget --quiet -O - "https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/fedora/install-docker.sh" | bash
 
 info "Installing PHP"
 info "Installing REMI GPG Key"
