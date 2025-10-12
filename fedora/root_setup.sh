@@ -133,7 +133,7 @@ systemctl enable --now redis
 info "Installing desktop software"
 
 dnf install -y vlc gnome-tweaks i3 i3status dmenu i3lock xbacklight feh conky libreoffice \
-	libreoffice-help-en filezilla virt-manager picom kitty scrot pass
+	libreoffice-help-en filezilla virt-manager picom kitty scrot pass xorg-x11-server-Xorg xterm
 
 info "Disable SELinux"
 setenforce 0
