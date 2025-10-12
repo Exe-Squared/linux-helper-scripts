@@ -11,7 +11,7 @@ fi
 # Assign command-line arguments to variables
 WIDTH=$1
 HEIGHT=$2
-OUTPUT_DIR="/home/$HOME/Pictures/"
+OUTPUT_DIR="$HOME/Pictures/"
 
 if [ -n "$3" ]; then
     OUTPUT_DIR="$3"
