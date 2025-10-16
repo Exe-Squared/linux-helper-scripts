@@ -21,11 +21,11 @@ wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scr
 ## Almalinux 10
 
 ```shell
-wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/alma/alma_root_setup.sh | sudo bash
+wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/alma/alma_root_setup.sh | sudo bash
 ```
 
 ```shell
-wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/alma/alma_user_setup.sh | bash
+wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/alma/alma_user_setup.sh | bash
 ```
 
 Reboot to have changes apply properly
@@ -36,11 +36,11 @@ reboot
 ## Fedora 42
 
 ```shell
-wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/fedora/root_setup.sh | sudo bash
+wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/root_setup.sh | sudo bash
 ```
 
 ```shell
-wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/fedora/user_setup.sh | bash
+wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/user_setup.sh | bash
 ```
 
 Reboot to have changes apply properly

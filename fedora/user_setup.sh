@@ -64,9 +64,9 @@ mkdir -p "${HOME}/.config"
 info "Configuring bash"
 sleep 2
 
-wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/fedora/files/.bash_aliases >"${HOME}/.bash_aliases"
-wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/fedora/files/.bash_profile >"${HOME}/.bash_profile"
-wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/fedora/files/.bashrc >"${HOME}/.bashrc"
+wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/files/.bash_aliases >"${HOME}/.bash_aliases"
+wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/files/.bash_profile >"${HOME}/.bash_profile"
+wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/files/.bashrc >"${HOME}/.bashrc"
 
 info "Installing rust"
 sleep 2
@@ -82,13 +82,13 @@ wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/mai
 info "Installing web server automation script"
 sleep 2
 
-wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/fedora/files/setup-site >"${HOME}/.local/bin/setup-site"
+wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/files/setup-site >"${HOME}/.local/bin/setup-site"
 chmod 755 "${HOME}/.local/bin/setup-site"
 
 info "Configuring tmux"
 sleep 2
 
-wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/fedora/files/tmux-sessionizer >"${HOME}/.local/bin/tmux-sessionizer"
+wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/files/tmux-sessionizer >"${HOME}/.local/bin/tmux-sessionizer"
 chmod 755 "${HOME}/.local/bin/tmux-sessionizer"
 wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/.tmux.conf >"${HOME}/.tmux.conf"
 
@@ -142,11 +142,11 @@ fi
 ~/.cargo/bin/cargo install eza
 
 # Install scripts
-wget -O "$HOME/.local/bin/compare-env" https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/fedora/files/compare-env.py
-wget -O "$HOME/.local/bin/get-image" https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/fedora/files/get-image
-wget -O "$HOME/.local/bin/install-php" https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/fedora/files/install-php.sh
-wget -O "$HOME/.local/bin/composer-via-docker" https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/fedora/files/composer-via-docker
-wget -O "$HOME/.local/bin/php-via-docker" https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/fedora/files/php-via-docker
+wget -O "$HOME/.local/bin/compare-env" https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/files/compare-env.py
+wget -O "$HOME/.local/bin/get-image" https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/files/get-image
+wget -O "$HOME/.local/bin/install-php" https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/files/install-php.sh
+wget -O "$HOME/.local/bin/composer-via-docker" https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/files/composer-via-docker
+wget -O "$HOME/.local/bin/php-via-docker" https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/files/php-via-docker
 
 chmod +x "$HOME/.local/bin/compare-env"
 chmod +x "$HOME/.local/bin/get-image"

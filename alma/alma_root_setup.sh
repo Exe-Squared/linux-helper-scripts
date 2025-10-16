@@ -82,7 +82,7 @@ rm -rf xclip
 systemctl enable --now httpd
 
 info "Installing docker"
-wget --quiet -O - "https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/feature/alma-9-scripts/alma/install-docker.sh" | bash
+wget --quiet -O - "https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/alma/install-docker.sh" | bash
 
 info "Installing PHP"
 info "Installing REMI GPG Key"
