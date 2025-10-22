@@ -56,5 +56,5 @@ fi
 
 docker exec -it -w "$(pwd)" "php${1//.}-fpm" composer ${@:2}
 
-chown "$USER:$USER" composer.lock || info "Composer.lock not found"
-chown -R "$USER:$USER" vendor || info "Vendor directory not found"
+sudo chown "$USER:$USER" composer.lock || info "Composer.lock not found"
+sudo chown -R "$USER:$USER" vendor || info "Vendor directory not found"
