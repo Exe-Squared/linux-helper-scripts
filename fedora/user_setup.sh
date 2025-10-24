@@ -141,6 +141,16 @@ fi
 # install binaries via cargo
 ~/.cargo/bin/cargo install eza
 
+# Set Up User for Mysql
+
+sudo systemctl enable --now mariadb
+sudo mysql --execute "CREATE USER '$USER'@'%';"
+sudo mysql --execute "GRANT ALL PRIVILEGES ON *.* TO '$USER'@'%';"
+
+info "Mysql user created"
+info "Username: $USER"
+info "No Password"
+
 # Install scripts
 wget -O "$HOME/.local/bin/compare-env" https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/files/compare-env.py
 wget -O "$HOME/.local/bin/get-image" https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/files/get-image
