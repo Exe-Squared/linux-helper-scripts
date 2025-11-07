@@ -214,15 +214,15 @@ RUN curl -sS https://getcomposer.org/installer | php -- \\
 WORKDIR /var/www
 
 # Create user and group
-RUN groupadd -g $UID $USER
-RUN useradd $USER -u $UID -g $UID -m -s /bin/sh
+RUN groupadd -g $UID ${USER,,}
+RUN useradd ${USER,,} -u $UID -g $UID -m -s /bin/sh
 
 # Update FPM config to run as new user
-RUN sed -i "s/user = www-data/user = $USER/g" "/usr/local/etc/php-fpm.d/www.conf"
-RUN sed -i "s/group = www-data/group = $USER/g" "/usr/local/etc/php-fpm.d/www.conf"
+RUN sed -i "s/user = www-data/user = ${USER,,}/g" "/usr/local/etc/php-fpm.d/www.conf"
+RUN sed -i "s/group = www-data/group = ${USER,,}/g" "/usr/local/etc/php-fpm.d/www.conf"
 
 # Change default user to this user
-USER $USER
+USER ${USER,,}
 
 # Expose FPM port
 EXPOSE 9000
