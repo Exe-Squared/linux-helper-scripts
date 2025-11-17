@@ -76,6 +76,10 @@ sudo dnf install -y \
 
 sudo wget --quiet -O - https://raw.githubusercontent.com/benmoses-dev/linux-helper-scripts/main/xdebug3.ini | sudo tee "/etc/opt/remi/${PHP}/php.d/15-xdebug.ini"
 
+sudo sed -i "s/apache/${USER}/g" "/etc/opt/remi/${PHP}/php-fpm.d/www.conf"
+sudo chown -R "root:${USER}" "/var/opt/remi/${PHP}/lib/php/opcache"
+sudo chown -R "root:${USER}" "/var/opt/remi/${PHP}/lib/php/session"
+sudo chown -R "root:${USER}" "/var/opt/remi/${PHP}/lib/php/wsdlcache"
 sudo systemctl enable --now "${PHP}-php-fpm"
 
 cat <<EOL >> "${HOME}/.bash_aliases"
