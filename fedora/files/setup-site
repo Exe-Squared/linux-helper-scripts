@@ -292,6 +292,9 @@ else
   sudo systemctl enable --now "${PHP}-php-fpm.service"
   sleep 1
   sudo sed -i "s/apache/${USER}/g" "/etc/opt/remi/${PHP}/php-fpm.d/www.conf"
+  sudo chown -R "root:${USER}" "/var/opt/remi/${PHP}/lib/php/opcache"
+  sudo chown -R "root:${USER}" "/var/opt/remi/${PHP}/lib/php/session"
+  sudo chown -R "root:${USER}" "/var/opt/remi/${PHP}/lib/php/wsdlcache"
   sudo systemctl restart "${PHP}-php-fpm.service"
 
   PHP_HANDLER="proxy:unix:/var/opt/remi/${PHP}/run/php-fpm/www.sock|fcgi://localhost"
