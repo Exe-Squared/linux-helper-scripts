@@ -56,11 +56,12 @@ dnf update -y
 info "Installing System Software"
 sleep 2
 
-dnf install gcc make automake autoconf gnupg git python3-devel vim shellcheck tmux ripgrep fd multitail tree jq yq rsync fzf -y
+dnf install gcc make automake autoconf gnupg git python3-devel neovim vim shellcheck tmux ripgrep fd multitail tree jq yq rsync fzf -y
 dnf install ca-certificates traceroute curl wget redis hyperfine -y
 dnf install htop bat mariadb-server httpd mod_ssl golang-bin xclip trash-cli -y
 
 systemctl enable --now httpd
+systemctl enable --now mariadb
 
 info "Installing docker"
 wget --quiet -O - "https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/install-docker.sh" | bash
@@ -68,13 +69,13 @@ wget --quiet -O - "https://raw.githubusercontent.com/Exe-Squared/linux-helper-sc
 info "Installing PHP"
 info "Installing REMI GPG Key"
 
-sudo rpm --import "https://rpms.remirepo.net/fedora/42/RPM-GPG-KEY-remi"
+sudo rpm --import "https://rpms.remirepo.net/fedora/43/RPM-GPG-KEY-remi"
 sudo dnf clean all
 sudo dnf update -y
 
 info "Installing REMI Repository"
 
-sudo dnf install -y "https://rpms.remirepo.net/fedora/remi-release-42.rpm"
+sudo dnf install -y "https://rpms.remirepo.net/fedora/remi-release-43.rpm"
 
 INSTALL_VERSIONS=("7.4" "8.0" "8.1" "8.2" "8.3" "8.4")
 for VERSION in "${INSTALL_VERSIONS[@]}"; do
