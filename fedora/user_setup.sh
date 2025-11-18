@@ -95,31 +95,20 @@ wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/mai
 info "Configuring vim and neovim"
 sleep 2
 
-# legacy vim config
-wget -O "${HOME}/.vimrc" https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/.vimrc
+# PHPStorm vim config
 wget -O "${HOME}/.ideavimrc" https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/.ideavimrc
 
 # neovim setup
-if [[ -n $(command -v nvim) ]]; then
-	error "Neovim is already installed!"
-	sleep 1
-else
-	if [[ ! -f "${HOME}/.local/bin/nvim" ]]; then
-		wget --quiet -O "${HOME}/.local/bin/nvim" https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage
-		chmod u+x "${HOME}/.local/bin/nvim"
-	fi
-	if [[ ! -d "${HOME}/.config/nvim" ]]; then
-		git clone https://github.com/benmoses-dev/my-neovim.git "${HOME}/.config/nvim"
-	fi
-	if [[ -n $(command -v npm) ]]; then
-		npm install -g neovim
-		npm install -g tree-sitter-cli
-	fi
-
-	success "Neovim installed successfully!"
-	warning "Consider moving the binary to /usr/local/bin if you have root privileges..."
-	sleep 2
+if [[ ! -d "${HOME}/.config/nvim" ]]; then
+	git clone https://github.com/benmoses-dev/my-neovim.git "${HOME}/.config/nvim"
 fi
+if [[ -n $(command -v npm) ]]; then
+	npm install -g neovim
+	npm install -g tree-sitter-cli
+fi
+
+success "Neovim installed successfully!"
+sleep 2
 
 # install starship
 wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/starship-install.sh | bash
@@ -140,16 +129,6 @@ fi
 
 # install binaries via cargo
 ~/.cargo/bin/cargo install eza
-
-# Set Up User for Mysql
-
-sudo systemctl enable --now mariadb
-sudo mysql --execute "CREATE USER '$USER'@'%';"
-sudo mysql --execute "GRANT ALL PRIVILEGES ON *.* TO '$USER'@'%';"
-
-info "Mysql user created"
-info "Username: $USER"
-info "No Password"
 
 # Install scripts
 wget -O "$HOME/.local/bin/compare-env" https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/files/compare-env.py
