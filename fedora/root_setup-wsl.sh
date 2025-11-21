@@ -59,8 +59,8 @@ dnf update -y
 info "Installing System Software"
 sleep 2
 
-dnf install gcc make automake autoconf gnupg git python3-devel neovim vim shellcheck tmux ripgrep fd multitail tree jq yq rsync fzf -y
-dnf install ca-certificates traceroute curl wget redis hyperfine -y
+dnf install gcc make automake autoconf gnupg git python3-devel shellcheck ripgrep fd multitail tree jq yq rsync fzf -y
+dnf install ca-certificates traceroute curl wget redis hyperfine mkcert -y
 dnf install htop bat mariadb-server httpd mod_ssl golang-bin xclip trash-cli -y
 
 systemctl enable --now httpd
