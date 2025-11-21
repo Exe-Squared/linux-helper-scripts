@@ -55,7 +55,7 @@ wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scr
 ```
 
 ```shell
-wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/user_setup.sh | bash
+wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/hotfix/fedora43_wsl/fedora/user_setup-wsl.sh | bash
 ```
 
 Reboot to have changes apply properly
