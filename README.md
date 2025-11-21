@@ -47,3 +47,18 @@ Reboot to have changes apply properly
 ```shell
 reboot
 ```
+
+## Fedora 43 - WSL
+
+```shell
+wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/hotfix/fedora43_wsl/fedora/root_setup-wsl.sh | sudo bash
+```
+
+```shell
+wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/user_setup.sh | bash
+```
+
+Reboot to have changes apply properly
+```shell
+reboot
+```
