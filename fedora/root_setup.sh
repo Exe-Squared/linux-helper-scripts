@@ -2,6 +2,9 @@
 
 set -e
 
+#required for following colour codes - may not be installed by default
+dnf install tput -y
+
 # Colours
 COLOR_RED=$(tput setaf 1)
 COLOR_GREEN=$(tput setaf 2)
