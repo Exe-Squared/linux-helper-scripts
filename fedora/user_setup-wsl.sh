@@ -82,7 +82,7 @@ wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/mai
 info "Installing web server automation script"
 sleep 2
 
-wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/files/setup-site >"${HOME}/.local/bin/setup-site"
+wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/hotfix/fedora43_wsl/fedora/files/setup-site-wsl >"${HOME}/.local/bin/setup-site"
 chmod 755 "${HOME}/.local/bin/setup-site"
 
 info "Configuring tmux"
