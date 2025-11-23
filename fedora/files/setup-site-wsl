@@ -1,0 +1,391 @@
+#!/usr/bin/env bash
+
+set -e
+
+# Colours
+COLOR_RED=$(tput setaf 1)
+COLOR_GREEN=$(tput setaf 2)
+COLOR_YELLOW=$(tput setaf 3)
+COLOR_BLUE=$(tput setaf 4)
+COLOR_RESET=$(tput sgr0)
+SILENT=false
+LARAVEL=false
+PUBLIC_DIR=""
+PHPVER=8.3
+
+print() {
+	if [[ "${SILENT}" = false ]]; then
+		echo -e "$@"
+	fi
+}
+
+usage() {
+	printf "%s\n" \
+		"setup-site [option]" \
+		"" \
+		"Create a web server configuration using the given project and php version"
+
+	printf "\n%s\n" "Options"
+	printf "\t%s\n\t\t%s\n\n" \
+		"-s, --silent" "Do not print informational output" \
+		"-l, --laravel" "Designate this as a laravel project - otherwise false" \
+		"-p, --php-ver" "Override the default php version [default: ${PHPVER}]" \
+		"-d, --dir" "Provide path to the project root directory" \
+		"-h, --help" "Display this help message"
+}
+
+error() {
+    print "${COLOR_RED}"
+    print "${1}"
+    print "${COLOR_RESET}"
+}
+
+info() {
+    print "${COLOR_YELLOW}"
+    print "${1}"
+    print "${COLOR_RESET}"
+}
+
+if [[ "$EUID" -eq 0 ]]; then
+    error "Do not run this script as root"
+    usage
+	exit 1
+fi
+
+# Parse arguments
+while [ "$#" -gt 0 ]; do
+	case "$1" in
+	-p | --php-ver)
+		PHPVER="$2"
+		shift 2
+		;;
+	-d | --dir)
+		PROJECT_DIR="$2"
+		shift 2
+		;;
+	-s | --silent)
+		SILENT=true
+		shift 1
+		;;
+	-l | --laravel)
+		LARAVEL=true
+		shift 1
+		;;
+	-h | --help)
+		usage
+		exit
+		;;
+	-p=* | --php-ver=*)
+		PHPVER="${1#*=}"
+		shift 1
+		;;
+	-d=* | --dir=*)
+		PROJECT_DIR="${1#*=}"
+		shift 1
+		;;
+	*)
+        error "Unknown option: $1"
+		usage
+		exit 1
+		;;
+	esac
+done
+
+if [[ -z $(command -v mkcert) ]]; then
+    info "Mkcert not installed"
+    error "Please install mkcert first"
+    usage
+    exit 1
+fi
+
+if [[ -z $(command -v httpd) ]]; then
+    info "Apache not installed"
+    read -rp "Install now? (y/N): " confirmation
+    if [[ "${confirmation}" = [yY] || "${confirmation}" = [yY][eE][sS] ]]; then
+        sudo dnf update
+        sudo dnf install httpd mod_ssl  -y
+    else
+        error "Please install apache first!"
+        usage
+        exit 1
+    fi
+fi
+sudo sed -i "s/User apache/User ${USER}/g" "/etc/httpd/conf/httpd.conf"
+sudo sed -i "s/Group apache/Group ${USER}/g" "/etc/httpd/conf/httpd.conf"
+sudo sed -i 's/^Listen 80$/Listen 0.0.0.0:80/' /etc/httpd/conf/httpd.conf
+sudo sed -i 's/^Listen 443 https$/Listen 0.0.0.0:443 https/' /etc/httpd/conf.d/ssl.conf
+
+if [[ -z "$PROJECT_DIR" ]]; then
+	if [[ -z $(command -v fzf) ]]; then
+        info "No project given and fzf (fuzzy finder) not installed"
+        read -rp "Install now? (y/N): " confirmed
+        if [[ "${confirmed}" = [yY] || "${confirmed}" = [yY][eE][sS] ]]; then
+            sudo dnf update
+            sudo dnf install fzf -y
+        else
+            error "Please either provide a project or install fzf"
+            usage
+            exit 1
+        fi
+	fi
+	info "No project given, using fuzzy finder..."
+	sleep 1
+	PROJECT_DIR=$(find "${HOME}" -mindepth 1 -maxdepth 4 -type d | fzf)
+fi
+
+if [[ -z "$PROJECT_DIR" ]]; then
+	error "Invalid project directory"
+	usage
+	exit 1
+fi
+
+# Get just the final project directory name without the path and without any leading or trailing whitespace or EOL/null characters
+PROJECT_NAME=$(basename -z "${PROJECT_DIR}" | xargs --null)
+if [[ -z "$PROJECT_NAME" ]]; then
+	error "Invalid project name"
+	usage
+	exit 1
+fi
+
+# If a relative path is given, convert to a full path
+BASE_PATH=$(dirname -z "${PROJECT_DIR}" | xargs --null)
+BASE_PATH=$(cd "${BASE_PATH}"; pwd)
+PROJECT_DIR="${BASE_PATH}/${PROJECT_NAME}"
+PROJECT_NAME=$(echo "${PROJECT_NAME}" | tr " " "-")
+
+PHPVER_WO_DOT=${PHPVER//.}
+PHP="php${PHPVER_WO_DOT}"
+if [[ ! -d "/opt/remi/${PHP}" ]]; then
+	info "${PHP} not installed"
+
+	if [[ ${PHPVER_WO_DOT} -lt 74 ]]; then
+    info "Version below 7.4 (${PHPVER}) is unavailable on Almalinux 10"
+    info "Using docker instead..."
+
+    # Check if docker file exists
+    mkdir -p "${HOME}/.local/docker"
+
+    if [[ -d "${HOME}/.local/docker/${PHP}" ]]; then
+      info "Docker already setup for PHP ${PHPVER}"
+
+      # Add volume mapping for this project - Docker compose is restarted later
+      yq eval ".services.php.volumes += [\"${PROJECT_DIR}:${PROJECT_DIR}\"]" -i "${HOME}/.local/docker/${PHP}/docker-compose.yml"
+    else
+      # Create Dockerfile and docker-compose.yml
+      mkdir -p "${HOME}/.local/docker/${PHP}"
+
+      info "Creating Dockerfile"
+
+      if [[ "${PHPVER_WO_DOT}" -eq 56 ]]; then
+        XDEBUG_VERSION="2.5.5"
+      else
+        XDEBUG_VERSION="2.9.8"
+      fi
+
+      cat <<EOL | tee "${HOME}/.local/docker/${PHP}/Dockerfile"
+# Use the official PHP ${PHPVER} FPM Alpine image
+FROM php:${PHPVER}-fpm-alpine
+
+# Install system dependencies and PHP extensions
+RUN apk add --no-cache git curl-dev unzip
+RUN apk add --no-cache libzip-dev curl libxml2-dev imap-dev
+RUN apk add --no-cache libpng-dev libjpeg-turbo-dev freetype-dev
+RUN apk add --no-cache autoconf gcc g++ make
+RUN apk add --no-cache shadow
+
+RUN docker-php-ext-install pdo pdo_mysql exif curl
+RUN docker-php-ext-install pcntl posix zip json
+RUN docker-php-ext-install gd mysqli
+RUN docker-php-ext-install bcmath imap
+
+RUN pecl install xdebug-${XDEBUG_VERSION}
+RUN docker-php-ext-enable xdebug
+
+RUN echo "xdebug.remote_enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \\
+ && echo "xdebug.remote_autostart=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \\
+ && echo "xdebug.remote_port=9003" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \\
+ && echo "xdebug.remote_host=host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
+
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- \\
+    --install-dir=/usr/local/bin \\
+    --filename=composer
+
+# Set working directory
+WORKDIR /var/www
+
+# Create user and group
+RUN groupadd -g $UID ${USER,,}
+RUN useradd ${USER,,} -u $UID -g $UID -m -s /bin/sh
+
+# Update FPM config to run as new user
+RUN sed -i "s/user = www-data/user = ${USER,,}/g" "/usr/local/etc/php-fpm.d/www.conf"
+RUN sed -i "s/group = www-data/group = ${USER,,}/g" "/usr/local/etc/php-fpm.d/www.conf"
+
+# Change default user to this user
+USER ${USER,,}
+
+# Expose FPM port
+EXPOSE 9000
+EXPOSE 9003
+
+# Start PHP-FPM
+CMD ["php-fpm"]
+EOL
+
+      info "Creating docker-compose.yml"
+
+      cat <<EOL | tee "${HOME}/.local/docker/${PHP}/docker-compose.yml"
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ${PHP}-fpm
+    volumes:
+      - ${PROJECT_DIR}:${PROJECT_DIR}
+    working_dir: /var/www
+    ports:
+      - "90${PHPVER_WO_DOT}:9000" # PHP-FPM listens on 9000
+      - "91${PHPVER_WO_DOT}:9003" # Xdebug listens on 9003
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+EOL
+
+      info "Starting docker compose"
+    fi
+  else
+    read -rp "Install now? (y/N): " confirm
+    if [[ "${confirm}" = [yY] || "${confirm}" = [yY][eE][sS] ]]; then
+        install-php "${PHPVER}"
+    fi
+  fi
+fi
+
+if [[ "${LARAVEL}" == true ]]; then
+	PUBLIC_DIR="/public"
+fi
+
+KEYFILE="/etc/ssl/private/"
+CERTFILE="/etc/ssl/certs/"
+
+sudo mkdir -p $KEYFILE
+sudo mkdir -p $CERTFILE
+
+DOMAIN="${PROJECT_NAME}.local"
+if [ ! -f "${CERTFILE}" ]; then
+    info "Generating new self signed certificate"
+
+    mkcert "${DOMAIN}"
+    sudo mv "${DOMAIN}.pem" "${CERTFILE}"
+    sudo mv "${DOMAIN}-key.pem" "${KEYFILE}"
+fi
+
+if [[ "${PHPVER_WO_DOT}" -lt 74 ]]; then
+  cd "${HOME}/.local/docker/${PHP}"
+  docker compose down || info "Docker compose not running"
+  docker compose build
+  docker compose up -d
+
+  PHP_HANDLER="proxy:fcgi://localhost:90${PHPVER_WO_DOT}"
+else
+  sudo systemctl enable --now "${PHP}-php-fpm.service"
+  sleep 1
+  sudo sed -i "s/apache/${USER}/g" "/etc/opt/remi/${PHP}/php-fpm.d/www.conf"
+  sudo chown -R "root:${USER}" "/var/opt/remi/${PHP}/lib/php/opcache"
+  sudo chown -R "root:${USER}" "/var/opt/remi/${PHP}/lib/php/session"
+  sudo chown -R "root:${USER}" "/var/opt/remi/${PHP}/lib/php/wsdlcache"
+  sudo systemctl restart "${PHP}-php-fpm.service"
+
+  PHP_HANDLER="proxy:unix:/var/opt/remi/${PHP}/run/php-fpm/www.sock|fcgi://localhost"
+fi
+
+info "Setting up apache server block..."
+sleep 1
+cat <<EOL | sudo tee "/etc/httpd/conf.d/${PROJECT_NAME}.conf"
+<IfModule mod_ssl.c>
+<VirtualHost *:443>
+  ServerName ${PROJECT_NAME}.local
+
+  DocumentRoot ${PROJECT_DIR}${PUBLIC_DIR}
+
+  <Directory ${PROJECT_DIR}${PUBLIC_DIR}>
+    Options FollowSymlinks
+    AllowOverride All
+    Require all granted
+    DirectoryIndex index.php index.html
+  </Directory>
+
+  <FilesMatch "\.php$">
+    SetHandler "${PHP_HANDLER}"
+  </FilesMatch>
+
+  LogFormat "%a %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
+  ErrorLog /var/log/httpd/${PROJECT_NAME}-error.log
+  CustomLog /var/log/httpd/${PROJECT_NAME}-access.log combined
+
+  SSLCertificateFile ${CERTFILE}${DOMAIN}.pem
+  SSLCertificateKeyFile ${KEYFILE}${DOMAIN}-key.pem
+</VirtualHost>
+</IfModule>
+
+<VirtualHost *:80>
+  ServerName ${PROJECT_NAME}.local
+
+  DocumentRoot ${PROJECT_DIR}${PUBLIC_DIR}
+
+  <Directory ${PROJECT_DIR}${PUBLIC_DIR}>
+      Options FollowSymLinks
+      AllowOverride All
+      Require all granted
+      DirectoryIndex index.php index.html
+  </Directory>
+
+  <FilesMatch "\.php$">
+      SetHandler  "${PHP_HANDLER}"
+  </FilesMatch>
+
+  LogFormat "%a %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
+  ErrorLog /var/log/httpd/${PROJECT_NAME}-error.log
+  CustomLog /var/log/httpd/${PROJECT_NAME}-access.log combined
+
+  <IfModule mod_ssl.c>
+    RewriteEngine on
+    RewriteCond %{SERVER_NAME} =${PROJECT_NAME}.local
+    RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]
+  </IfModule>
+</VirtualHost>
+
+EOL
+
+info "Restarting apache..."
+sleep 1
+
+
+if ! sudo httpd -t >/dev/null 2>&1; then
+    error "Something went wrong with the apache configuration"
+    error "Check the configuration file at /etc/httpd/conf.d/${PROJECT_NAME}.conf"
+    exit 1
+fi
+
+sudo systemctl reload httpd
+
+if [[ -n $(command -v hostctl) ]]; then
+    sudo hostctl add domains local "${DOMAIN}"
+
+    print "${COLOR_GREEN}"
+    print "Done! Go to ${PROJECT_NAME}.local to test the site"
+    print "${COLOR_RESET}"
+else
+  print "${COLOR_BLUE}"
+  print "Almost there! hostctl is not installed"
+  print "Add the following to /etc/hosts to access your local site"
+  print "127.0.0.1 ${DOMAIN}"
+  print "${COLOR_RESET}"
+fi
+
+
+sleep 1
+
