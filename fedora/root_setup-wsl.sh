@@ -61,7 +61,7 @@ sleep 2
 
 dnf install gcc make automake autoconf gnupg git python3-devel tree jq yq rsync fzf -y
 dnf install ca-certificates traceroute curl wget redis mkcert -y
-dnf install htop mariadb-server httpd mod_ssl golang-bin -y
+dnf install htop mariadb-server httpd mod_ssl golang-bin postgresql postgresql-server -y
 
 systemctl enable --now httpd
 systemctl enable --now mariadb
