@@ -68,10 +68,10 @@ wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/mai
 wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/files/.bash_profile >"${HOME}/.bash_profile"
 wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/files/.bashrc >"${HOME}/.bashrc"
 
-info "Installing rust"
-sleep 2
+# info "Installing rust"
+# sleep 2
 
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+# curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 # install nvm, node, and npm
 wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/nvm-install.sh | bash
