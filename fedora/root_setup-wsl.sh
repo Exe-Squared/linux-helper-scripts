@@ -66,6 +66,20 @@ dnf install htop mariadb-server httpd mod_ssl golang-bin postgresql postgresql-s
 systemctl enable --now httpd
 systemctl enable --now mariadb
 
+# PostgreSQL setup
+postgresql-setup --initdb
+
+PG_HBA="/var/lib/pgsql/data/pg_hba.conf"
+
+# Backup original
+cp "$PG_HBA" "$PG_HBA.bak"
+
+# Replace ident with scram-sha-256 for host connections
+sed -i 's/\bident\b/scram-sha-256/g' "$PG_HBA"
+
+systemctl enable --now postgresql
+
+
 info "Installing docker"
 wget --quiet -O - "https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/install-docker.sh" | bash
 
