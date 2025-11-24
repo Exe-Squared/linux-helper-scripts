@@ -11,7 +11,7 @@ COLOR_RESET=$(tput sgr0)
 SILENT=false
 LARAVEL=false
 PUBLIC_DIR=""
-PHPVER=8.3
+PHPVER=8.5
 
 print() {
 	if [[ "${SILENT}" = false ]]; then
