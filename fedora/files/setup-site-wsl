@@ -370,7 +370,7 @@ if ! sudo httpd -t >/dev/null 2>&1; then
     exit 1
 fi
 
-sudo systemctl reload httpd
+sudo systemctl restart httpd
 
 if [[ -n $(command -v hostctl) ]]; then
     sudo hostctl add domains local "${DOMAIN}"
