@@ -85,12 +85,12 @@ sleep 2
 wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/hotfix/fedora43_wsl/fedora/files/setup-site-wsl >"${HOME}/.local/bin/setup-site"
 chmod 755 "${HOME}/.local/bin/setup-site"
 
-info "Configuring tmux"
-sleep 2
+#info "Configuring tmux"
+#sleep 2
 
-wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/files/tmux-sessionizer >"${HOME}/.local/bin/tmux-sessionizer"
-chmod 755 "${HOME}/.local/bin/tmux-sessionizer"
-wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/.tmux.conf >"${HOME}/.tmux.conf"
+#wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/files/tmux-sessionizer >"${HOME}/.local/bin/tmux-sessionizer"
+#chmod 755 "${HOME}/.local/bin/tmux-sessionizer"
+#wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/.tmux.conf >"${HOME}/.tmux.conf"
 
 #info "Configuring vim and neovim"
 #sleep 2
@@ -111,7 +111,7 @@ wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/mai
 #sleep 2
 
 # install starship
-wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/starship-install.sh | bash
+#wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/starship-install.sh | bash
 
 ## install mkcert
 
@@ -129,7 +129,7 @@ wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/mai
 #fi
 
 # install binaries via cargo
-~/.cargo/bin/cargo install eza
+# ~/.cargo/bin/cargo install eza
 
 # Install scripts
 wget -O "$HOME/.local/bin/compare-env" https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/files/compare-env.py
