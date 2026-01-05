@@ -157,5 +157,9 @@ systemctl enable --now redis
 #setenforce 0
 #sed -i "s/SELINUX=enforcing/SELINUX=disabled/g" /etc/selinux/config
 
+#SET this for Fedora 43 - NOT Needed in Ubuntu
+#it makes Windows executables be callable in linux
+echo ':WSLInterop:M::MZ::/init:PF' | sudo tee /usr/lib/binfmt.d/WSLInterop.conf && sudo systemctl restart systemd-binfmt
+
 success "System Software Install Finished!"
 sleep 1
