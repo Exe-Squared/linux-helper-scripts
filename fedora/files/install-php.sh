@@ -74,7 +74,7 @@ sudo dnf install -y \
   "${PHP}-php-bcmath" "${PHP}-php-imap" "${PHP}-php-imagick" "${PHP}-php-devel" "${PHP}-php-pecl-xdebug" \
   "${PHP}-php-intl"
 
-sudo wget --quiet -O - https://raw.githubusercontent.com/benmoses-dev/linux-helper-scripts/main/xdebug3.ini | sudo tee "/etc/opt/remi/${PHP}/php.d/15-xdebug.ini"
+sudo wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/xdebug3.ini | sudo tee "/etc/opt/remi/${PHP}/php.d/15-xdebug.ini"
 
 sudo sed -i "s/apache/${USER}/g" "/etc/opt/remi/${PHP}/php-fpm.d/www.conf"
 sudo chown -R "root:${USER}" "/var/opt/remi/${PHP}/lib/php/opcache"
@@ -83,7 +83,7 @@ sudo chown -R "root:${USER}" "/var/opt/remi/${PHP}/lib/php/wsdlcache"
 sudo systemctl enable --now "${PHP}-php-fpm"
 
 cat <<EOL >> "${HOME}/.bash_aliases"
-alias php${VERSION_WO_DOT}='toggle-php ${VERSION_WO_DOT}'
+alias php${PHP_VERSION}='toggle-php ${PHP_VERSION}'
 EOL
 
 # Remove /usr/bin/php if it exists and is not a symlink
@@ -101,6 +101,6 @@ if [ -e /usr/bin/php-config ] && ! [ -h /usr/bin/php-config ]; then
   sudo unlink /usr/bin/php-config
 fi
 
-sudo update-alternatives --install /usr/bin/php php "/opt/remi/php${VERSION_WO_DOT}/root/usr/bin/php" "${VERSION_WO_DOT}"
-sudo update-alternatives --install /usr/bin/phpize phpize "/opt/remi/php${VERSION_WO_DOT}/root/usr/bin/phpize" "${VERSION_WO_DOT}"
-sudo update-alternatives --install /usr/bin/php-config php-config "/opt/remi/php${VERSION_WO_DOT}/root/usr/bin/php-config" "${VERSION_WO_DOT}"
+sudo update-alternatives --install /usr/bin/php php "/opt/remi/php${PHP_VERSION}/root/usr/bin/php" "${PHP_VERSION}"
+sudo update-alternatives --install /usr/bin/phpize phpize "/opt/remi/php${PHP_VERSION}/root/usr/bin/phpize" "${PHP_VERSION}"
+sudo update-alternatives --install /usr/bin/php-config php-config "/opt/remi/php${PHP_VERSION}/root/usr/bin/php-config" "${PHP_VERSION}"

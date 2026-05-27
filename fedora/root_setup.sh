@@ -66,16 +66,18 @@ systemctl enable --now mariadb
 info "Installing docker"
 wget --quiet -O - "https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/install-docker.sh" | bash
 
-info "Installing PHP"
+source /etc/os-release
+
+info "Installing PHP for Fedora ${VERSION_ID}"
 info "Installing REMI GPG Key"
 
-sudo rpm --import "https://rpms.remirepo.net/fedora/43/RPM-GPG-KEY-remi"
+sudo rpm --import "https://rpms.remirepo.net/fedora/${VERSION_ID}/RPM-GPG-KEY-remi"
 sudo dnf clean all
 sudo dnf update -y
 
 info "Installing REMI Repository"
 
-sudo dnf install -y "https://rpms.remirepo.net/fedora/remi-release-43.rpm"
+sudo dnf install -y "https://rpms.remirepo.net/fedora/remi-release-${VERSION_ID}.rpm"
 
 INSTALL_VERSIONS=("7.4" "8.0" "8.1" "8.2" "8.3" "8.4")
 for VERSION in "${INSTALL_VERSIONS[@]}"; do
@@ -101,7 +103,7 @@ for VERSION in "${INSTALL_VERSIONS[@]}"; do
     "${PHP}-php-bcmath" "${PHP}-php-imap" "${PHP}-php-imagick" "${PHP}-php-devel" "${PHP}-php-pecl-xdebug" \
     "${PHP}-php-intl"
 
-  wget --quiet -O - https://raw.githubusercontent.com/benmoses-dev/linux-helper-scripts/main/xdebug3.ini > "/etc/opt/remi/${PHP}/php.d/15-xdebug.ini"
+  wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/xdebug3.ini > "/etc/opt/remi/${PHP}/php.d/15-xdebug.ini"
 
   systemctl enable --now "${PHP}-php-fpm"
 

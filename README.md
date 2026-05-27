@@ -33,7 +33,7 @@ Reboot to have changes apply properly
 reboot
 ```
 
-## Fedora 42
+## Fedora
 
 ```shell
 wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/root_setup.sh | sudo bash
