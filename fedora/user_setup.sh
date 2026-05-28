@@ -76,6 +76,10 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 # install nvm, node, and npm
 wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/nvm-install.sh | bash
 
+# Load nvm into the current shell so subsequent npm calls use the nvm-installed node
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
 # install composer
 wget -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/composer-install.sh | bash
 
