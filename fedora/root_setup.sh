@@ -68,6 +68,10 @@ wget --quiet -O - "https://raw.githubusercontent.com/Exe-Squared/linux-helper-sc
 
 source /etc/os-release
 
+info "Disable SELinux"
+setenforce 0
+sed -i "s/SELINUX=enforcing/SELINUX=disabled/g" /etc/selinux/config
+
 info "Installing PHP for Fedora ${VERSION_ID}"
 info "Installing REMI GPG Key"
 
@@ -79,7 +83,7 @@ info "Installing REMI Repository"
 
 sudo dnf install -y "https://rpms.remirepo.net/fedora/remi-release-${VERSION_ID}.rpm"
 
-INSTALL_VERSIONS=("7.4" "8.0" "8.1" "8.2" "8.3" "8.4")
+INSTALL_VERSIONS=("7.4" "8.0" "8.1" "8.2" "8.3" "8.4" "8.5")
 for VERSION in "${INSTALL_VERSIONS[@]}"; do
   VERSION_WO_DOT=${VERSION//.}
     PHP="php${VERSION_WO_DOT}"
@@ -139,10 +143,6 @@ info "Installing desktop software"
 
 dnf install -y vlc gnome-tweaks i3 i3status dmenu i3lock xbacklight feh conky libreoffice \
 	libreoffice-help-en filezilla virt-manager picom kitty scrot pass xorg-x11-server-Xorg xterm
-
-info "Disable SELinux"
-setenforce 0
-sed -i "s/SELINUX=enforcing/SELINUX=disabled/g" /etc/selinux/config
 
 success "System Software Install Finished!"
 sleep 1
