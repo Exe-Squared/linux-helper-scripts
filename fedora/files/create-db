@@ -1,0 +1,159 @@
+#!/usr/bin/env bash
+
+set -e
+
+COLOR_RED=$(tput setaf 1)
+COLOR_GREEN=$(tput setaf 2)
+COLOR_YELLOW=$(tput setaf 3)
+COLOR_BLUE=$(tput setaf 4)
+COLOR_RESET=$(tput sgr0)
+
+print() {
+    echo -e "$@"
+}
+
+usage() {
+    printf "%s\n" \
+        "create-db [option]" \
+        "" \
+        "Create a database configuration"
+
+    printf "\n%s\n" "Options"
+    printf "\t%s\n\t\t%s\n\n" \
+        "-n, --name USER" "Database name and user (required, will be sanitised - hyphens replaced with underscores and special characters removed)" \
+        "-p, --pass PASS" "Database user password (no special characters, default: 'password')" \
+        "-h, --help" "Display this help message"
+}
+
+error() {
+    print "${COLOR_RED}"
+    print "${1}"
+    print "${COLOR_RESET}"
+}
+
+info() {
+    print "${COLOR_YELLOW}"
+    print "${1}"
+    print "${COLOR_RESET}"
+}
+
+success() {
+    print "${COLOR_GREEN}"
+    print "${1}"
+    print "${COLOR_RESET}"
+}
+
+# ---- Parse arguments ----
+USER_NAME=""
+USER_PASS="password"
+
+while [[ "$#" -gt 0 ]]; do
+    case "$1" in
+        -n | --name)
+            USER_NAME="$2"
+            shift 2
+            ;;
+        -p | --pass)
+            USER_PASS="$2"
+            shift 2
+            ;;
+        -h | --help)
+            usage
+            exit
+            ;;
+        *)
+            error "Unknown option: $1"
+            usage
+            exit 1
+            ;;
+    esac
+done
+
+sanitise() {
+    # remove all characters except alphanumeric, underscores, hyphens. Then replace hyphens with underscores
+    echo "$1" | sed 's/[^a-zA-Z0-9_-]//g' | sed 's/-/_/g'
+}
+USER_NAME=$(sanitise "$USER_NAME")
+USER_PASS=$(sanitise "$USER_PASS")
+DB_NAME="$USER_NAME"
+
+if [[ -z "$DB_NAME" || -z "$USER_NAME" || -z "$USER_PASS" ]]; then
+    error "Name and password must be provided."
+    usage
+    exit 1
+fi
+
+# ---- Detect installed drivers ----
+options=()
+if command -v psql >/dev/null 2>&1; then
+    options+=("PostgreSQL")
+fi
+if command -v mysql >/dev/null 2>&1; then
+    options+=("MySQL/MariaDB")
+fi
+
+if [[ ${#options[@]} -eq 0 ]]; then
+    error "No supported database drivers found (psql, mysql)."
+    exit 1
+fi
+
+info "Available database drivers:"
+for i in "${!options[@]}"; do
+    info "  $((i+1)). ${options[$i]}"
+done
+
+read -rp "Choose a driver (1-${#options[@]}): " choice
+choice=$((choice - 1))
+if [[ $choice -lt 0 || $choice -ge ${#options[@]} ]]; then
+    error "Invalid choice."
+    exit 1
+fi
+
+DRIVER="${options[$choice]}"
+
+info "Using driver: $DRIVER"
+info "Database name: $DB_NAME"
+info "User: $USER_NAME"
+info "Password: $USER_PASS"
+
+# ---- Create DB depending on driver ----
+
+PG_ROLE_STATEMENT=$(cat <<EOF
+DO \$\$
+BEGIN
+    IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = '$USER_NAME') THEN
+        CREATE ROLE $USER_NAME LOGIN PASSWORD '$USER_PASS';
+    END IF;
+END
+\$\$;
+EOF
+)
+PG_DB_STATEMENT="CREATE DATABASE $DB_NAME OWNER $USER_NAME;"
+
+MYSQL_STATEMENT=$(cat <<EOF
+CREATE DATABASE IF NOT EXISTS \`$DB_NAME\`;
+CREATE USER IF NOT EXISTS '$USER_NAME'@'localhost' IDENTIFIED BY '$USER_PASS';
+CREATE USER IF NOT EXISTS '$USER_NAME'@'%' IDENTIFIED BY '$USER_PASS';
+GRANT ALL PRIVILEGES ON \`$DB_NAME\`.* TO '$USER_NAME'@'localhost';
+FLUSH PRIVILEGES;
+EOF
+)
+
+case "$DRIVER" in
+    "PostgreSQL")
+        info "Creating PostgreSQL database and user..."
+        echo "$PG_ROLE_STATEMENT"
+        echo "$PG_DB_STATEMENT"
+        sudo -u postgres psql -v ON_ERROR_STOP=1 -c "$PG_ROLE_STATEMENT"
+        sudo -u postgres psql -v ON_ERROR_STOP=1 -c "$PG_DB_STATEMENT"
+        success "PostgreSQL DB and user created."
+        ;;
+    "MySQL/MariaDB")
+        info "Creating MySQL/MariaDB database and user..."
+        echo "$MYSQL_STATEMENT"
+        sudo mysql -e "$MYSQL_STATEMENT"
+        success "MySQL/MariaDB DB and user created."
+        ;;
+esac
+
+success "Done."

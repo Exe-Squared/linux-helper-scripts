@@ -140,12 +140,14 @@ wget -O "$HOME/.local/bin/get-image" https://raw.githubusercontent.com/Exe-Squar
 wget -O "$HOME/.local/bin/install-php" https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/files/install-php.sh
 wget -O "$HOME/.local/bin/composer-via-docker" https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/files/composer-via-docker
 wget -O "$HOME/.local/bin/php-via-docker" https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/files/php-via-docker
+wget -O "$HOME/.local/bin/create-db" https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/main/fedora/files/create-db
 
 chmod +x "$HOME/.local/bin/compare-env"
 chmod +x "$HOME/.local/bin/get-image"
 chmod +x "$HOME/.local/bin/install-php"
 chmod +x "$HOME/.local/bin/composer-via-docker"
 chmod +x "$HOME/.local/bin/php-via-docker"
+chmod +x "$HOME/.local/bin/create-db"
 
 success "User software installed successfully!"
 sleep 1

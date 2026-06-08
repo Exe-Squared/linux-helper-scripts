@@ -375,12 +375,14 @@ if [[ -n $(command -v hostctl) ]]; then
 
     print "${COLOR_GREEN}"
     print "Done! Go to ${PROJECT_NAME}.local to test the site"
+    print "Remember to use 'host.docker.internal' instead of 'localhost' in the container"
     print "${COLOR_RESET}"
 else
   print "${COLOR_BLUE}"
   print "Almost there! hostctl is not installed"
   print "Add the following to /etc/hosts to access your local site"
   print "127.0.0.1 ${DOMAIN}"
+  print "Remember to use 'host.docker.internal' instead of 'localhost' in the container"
   print "${COLOR_RESET}"
 fi
 

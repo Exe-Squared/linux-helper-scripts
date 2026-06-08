@@ -61,6 +61,12 @@ dnf install ca-certificates traceroute curl wget redis hyperfine -y
 dnf install htop bat mariadb-server httpd mod_ssl golang-bin xclip trash-cli -y
 
 systemctl enable --now httpd
+
+info "Setting up mariadb for external access - so it works with docker containers"
+sudo tee /etc/my.cnf.d/bind-address.cnf > /dev/null << 'EOF'
+[mysqld]
+bind-address = 0.0.0.0
+EOF
 systemctl enable --now mariadb
 
 info "Installing docker"
