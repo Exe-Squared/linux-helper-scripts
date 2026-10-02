@@ -57,5 +57,5 @@ wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scr
 ## Fedora 44 - WSL
 
 ```shell
-wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/hotfix/fedora43_wsl/fedora/ root_setup-wsl-fedora44.sh | sudo bash && wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/hotfix/fedora43_wsl/fedora/user_setup-wsl.sh | bash && sudo reboot
+wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/hotfix/fedora43_wsl/fedora/root_setup-wsl-fedora44.sh | sudo bash && wget --quiet -O - https://raw.githubusercontent.com/Exe-Squared/linux-helper-scripts/refs/heads/hotfix/fedora43_wsl/fedora/user_setup-wsl.sh | bash && sudo reboot
 ```
