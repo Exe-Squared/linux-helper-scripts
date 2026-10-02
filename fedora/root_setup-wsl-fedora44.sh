@@ -4,6 +4,8 @@ set -e
 
 #required for following colour codes - may not be installed by default
 dnf install tput -y
+dnf install git -y
+dnf install awk -y
 
 # Colours
 COLOR_RED=$(tput setaf 1)
@@ -57,7 +59,7 @@ dnf update -y
 info "Installing System Software"
 sleep 2
 
-dnf install gcc make automake autoconf gnupg git python3-devel tree jq yq rsync fzf ca-certificates traceroute curl wget redis mkcert htop mariadb-server httpd mod_ssl golang-bin postgresql postgresql-server -y
+dnf install awk tput gcc make automake autoconf gnupg git python3-devel tree jq yq rsync fzf ca-certificates traceroute curl wget redis mkcert htop mariadb-server httpd mod_ssl golang-bin postgresql postgresql-server -y
 
 systemctl enable --now httpd
 systemctl enable --now mariadb
